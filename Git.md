@@ -2,24 +2,6 @@
 
 版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。
 
-- 实现跨区域多人协同开发
-- 追踪和记载一个或者多个文件的历史记录
-- 组织和保护你的源代码和文档
-- 统计工作量
-- 并行开发、提高开发效率
-- 跟踪记录整个软件的开发过程
-- 减轻开发人员的负担，节省时间，同时降低人为错误
-
-简单说就是用于管理多人协同开发项目的技术。
-
-没有进行版本控制或者版本控制本身缺乏正确的流程管理，在软件开发过程中将会引入很多问题，如软件代码的一致性、软件内容的冗余、软件过程的事物性、软件开发过程中的并发性、软件源代码的安全性，以及软件的整合等问题。
-
-无论是工作还是学习，或者是自己做笔记，都经历过这样一个阶段！我们就迫切需要一个版本控制工具！
-
-![图片](https://mmbiz.qpic.cn/mmbiz_png/uJDAUKrGC7Ksu8UlITwMlbX3kMGtZ9p0C4qeLxMgoTg9B154ibahsUaibiaV7DgH9GTFQZj3Kyhf5fxrj6G2U5HFg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
-
-多人开发就必须要使用版本控制！
-
 ## 常见的版本控制工具
 
 我们学习的东西，一定是当下最流行的！
@@ -32,8 +14,6 @@
 - **VSS**（Micorosoft Visual SourceSafe）
 - **TFS**（Team Foundation Server）
 - Visual Studio Online
-
-版本控制产品非常的多（Perforce、Rational ClearCase、RCS（GNU Revision Control System）、Serena Dimention、SVK、BitKeeper、Monotone、Bazaar、Mercurial、SourceGear Vault），现在影响力最大且使用最广泛的是Git与SVN
 
 ## 版本控制分类
 
@@ -71,25 +51,7 @@ Git是分布式版本控制系统，没有中央服务器，每个人的电脑�
 
 **Git是目前世界上最先进的分布式版本控制系统。**
 
-聊聊Git的历史
-
-同生活中的许多伟大事物一样，Git 诞生于一个极富纷争大举创新的年代。
-
-Linux 内核开源项目有着为数众广的参与者。绝大多数的 Linux 内核维护工作都花在了提交补丁和保存归档的繁琐事务上(1991－2002年间)。到 2002 年，整个项目组开始启用一个专有的分布式版本控制系统 BitKeeper 来管理和维护代码。
-
-Linux社区中存在很多的大佬！破解研究 BitKeeper ！
-
-到了 2005 年，开发 BitKeeper 的商业公司同 Linux 内核开源社区的合作关系结束，他们收回了 Linux 内核社区免费使用 BitKeeper 的权力。这就迫使 Linux 开源社区(特别是 Linux 的缔造者 Linus Torvalds)基于使用 BitKeeper 时的经验教训，开发出自己的版本系统。（2周左右！） 也就是后来的 Git！
-
-**Git是目前世界上最先进的分布式版本控制系统。**
-
-Git是免费、开源的，最初Git是为辅助 Linux 内核开发的，来替代 BitKeeper！
-
-![图片](https://mmbiz.qpic.cn/mmbiz_png/uJDAUKrGC7Ksu8UlITwMlbX3kMGtZ9p0XGLbyFDUiccCsib4L9Vkg7neJVWupfScbrjd7zm7apC8eYTzgQztNAnA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
-
-Linux和Git之父李纳斯·托沃兹（Linus Benedic Torvalds）1969、芬兰
-
-Git环境配置
+## Git环境配置
 
 ## 软件下载
 
@@ -172,7 +134,9 @@ rm -rf / 切勿在Linux中尝试！删除电脑中全部文件！
 查看不同级别的配置文件：
 
 ```
-#查看系统configgit config --system --list　　#查看当前用户（global）配置git config --global  --list
+#查看系统configgit config --system --list　　
+#查看当前用户（global）
+配置git config --global  --list
 ```
 
 **Git相关的配置文件：**
@@ -192,7 +156,8 @@ rm -rf / 切勿在Linux中尝试！删除电脑中全部文件！
 当你安装Git后首先要做的事情是设置你的用户名称和e-mail地址。这是非常重要的，因为每次Git提交都会使用该信息。它被永远的嵌入到了你的提交中：
 
 ```
-git config --global user.name "kuangshen"  #名称git config --global user.email 24736743@qq.com   #邮箱
+git config --global user.name "kuangshen"  #名称
+git config --global user.email 24736743@qq.com   #邮箱
 ```
 
 只需要做一次这个设置，如果你传递了--global 选项，因为Git将总是会使用该信息来处理你在系统中所做的一切操作。如果你希望在一个特定的项目中使用不同的名称或e-mail地址，你可以在该项目中运行该命令而不要--global选项。总之--global为全局配置，不加为某个项目的特定配置。
@@ -293,9 +258,14 @@ Git文件操作
 上面说文件有4种状态，通过如下命令可以查看到文件的状态：
 
 ```
-#查看指定文件状态git status [filename]
-#查看所有文件状态git status
-# git add .                  添加所有文件到暂存区# git commit -m "消息内容"    提交暂存区中的内容到本地仓库 -m 提交信息
+#查看指定文件状态
+git status [filename]
+#查看所有文件状态
+git status
+#添加所有文件到暂存区
+git add .                  
+#"消息内容"    提交暂存区中的内容到本地仓库 -m 提交信息
+git commit -m 
 ```
 
 
@@ -313,7 +283,8 @@ Git文件操作
 5. 如果名称的最后面是一个路径分隔符（/），表示要忽略的是此目录下该名称的子目录，而非文件（默认文件或目录都忽略）。
 
 ```
-#为注释*.txt        #忽略所有 .txt结尾的文件,这样的话上传就不会被选中！!lib.txt     #但lib.txt除外/temp        #仅忽略项目根目录下的TODO文件,不包括其它目录tempbuild/       #忽略build/目录下的所有文件doc/*.txt    #会忽略 doc/notes.txt 但不包括 doc/server/arch.txt
+#为注释*.txt        #忽略所有 .txt结尾的文件,这样的话上传就不会被选中！
+!lib.txt     #但lib.txt除外/temp        #仅忽略项目根目录下的TODO文件,不包括其它目录tempbuild/       #忽略build/目录下的所有文件doc/*.txt    #会忽略 doc/notes.txt 但不包括 doc/server/arch.txt
 ```
 
 
@@ -330,12 +301,9 @@ Git文件操作
 
 2、设置本机绑定SSH公钥，实现免密码登录！（免密码登录，这一步挺重要的，码云是远程仓库，我们是平时工作在本地仓库！)
 
-- 
-- 
-- 
-
 ```
-# 进入 C:\Users\Administrator\.ssh 目录# 生成公钥ssh-keygen
+# 进入 
+C:\Users\Administrator\.ssh 目录# 生成公钥ssh-keygen
 ```
 
 ![图片](https://mmbiz.qpic.cn/mmbiz_png/uJDAUKrGC7Ksu8UlITwMlbX3kMGtZ9p0YlK4ibQ0EMs3LmRmdiahpma8ssTQedkhyShNkibTyFBvaZWicicTfNicWQIA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)
