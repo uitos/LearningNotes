@@ -70,11 +70,11 @@ docker ps命令查看容器运行情况
 
 docker exec -it redis /bin/bash
 
-![](https://typora-1306474759.cos.ap-beijing.myqcloud.com/typora/20240403125316.png)
+![](Docker.assets/20240403125316.png)
 
 exit退出容器
 
-![](https://typora-1306474759.cos.ap-beijing.myqcloud.com/typora/20240403125425.png)
+![](Docker.assets/20240403125425.png)
 
 ### Docker安装mysql:5.7
 
