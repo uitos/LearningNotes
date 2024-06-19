@@ -44,10 +44,115 @@
 赋值运算符
 关系运算符/比较运算符
 逻辑运算符
-短路逻辑运算符 && ||
-三元运算符
+
+## 短路逻辑运算符 
+
+&& 与 逻辑 并且的意思，全为true结果 才是true
+|| 或 逻辑 或者的意思，全为false结果才是false
+
+**&& || 和 & |**
+
+&& 短路与 ，只要第一个为false，发生短路 ，优点提高程序运行效率
+|| 短路或 ，只要第一个为true，发生短路
+
+```java
+int x = 12;
+int y = 13;
+boolean z = x>y && x++ < y ;
+System.out.println(z);//flase
+System.out.println(x);//12
+z = x>y & x++ < y ;
+System.out.println(z);//flase
+System.out.println(x);//13
+```
+
+
+
+## 三元运算符
+
+```java
+public class TernaryDemo {
+    public static void main(String[] args){
+        int a = 20;
+        int b = 40;
+        int max = a>b ? a : b ;
+        System.out.println(max+"是最大值");
+    }
+}
+```
 
 ## 运算符优先级
+
+# 分支语句
+
+## switch
+
+```java
+Scanner sc = new Scanner(System.in);
+System.out.println("请输入今天星期几：");
+String week = sc.next();
+String activity = "";
+/*switch (week) {
+    case "周一" :
+        activity = "跑步";
+        break;
+    case "周二":
+        activity = "游泳";
+        break;
+    default: activity = "输入错误";
+}*/
+```
+jdk14 ：箭头语法 把case后的 -> 代替break
+jdk12 ：case 多值语法，多个值用逗号隔开
+
+```Java
+//jdk14 箭头语法 把case后的: -> 代替break
+//jdk12 case 多值语法，多个值用逗号隔开
+switch (week) {
+    case "周一","周三","周五" -> activity = "跑步";
+    case "周二","周四","周六" -> activity = "游泳";
+    case "周日" -> activity = "好好吃一顿";
+    default -> activity = "输入错误";
+}
+```
+
+## if与switch选择问题
+
+优先使用 switch ：出现**byte/short/char/int，String，enum**，并且分支足够多（三个以上）
+
+优先使用if ：出现范围条件时
+
+# 循环语句
+
+## for
+
+```java
+public static void main(String[] args){
+    int a = 1;
+     //首先执行 初始化语句,只能执行一次
+    // 然后执行比较语句->true->执行循环体(重复的代码)->步进语句
+    //              ->false -> 循环结束
+    for(int i=0; i<100; i++){
+        a = a++;//1
+    }
+    System.out.println(a);//1
+}
+```
+
+## for与while的选择
+
+```java
+//循环次数确定 ： 优先使用for循环
+//循环次数不确定 ：优先使用while循环 
+```
+
+# 随机数Random
+
+```java
+Random r = new Random();
+//jdk17新增语法 可以指定生成随机数的范围->由于计算机语言的差1性 ->[,)
+int i = r.nextInt(1,7);
+```
 
 
 
