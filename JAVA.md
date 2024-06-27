@@ -146,8 +146,6 @@ Random r = new Random();
 int i = r.nextInt(1,7);
 ```
 
-
-
 # 数组
 
 ## 静态初始化
@@ -192,7 +190,7 @@ System.out.println(arr);//地址值[I@4eec7777
 
 ```java
 //数组的长度属性。
-// 调用方式  数组名.length
+//调用方式  数组名.length
 
 //扩展
 //自动的快速生成数组的遍历方式
@@ -352,7 +350,7 @@ System.out.print(8<<2);//= 8*4 = 32
 
 类（设计图）：是对象共同特征的描述；
 
-对象：是真实存在的具体东西：
+对象：我们自己臆造出来的，具备属性和行为的东西
 
 ## 定义类
 
@@ -479,6 +477,16 @@ this的本质：代表方法调用者的地址值
 
 String是java定义好的类，在java.lang包中
 
+```java
+//jdk15 引入文本块
+String s = """
+    		
+    		
+    		""";
+```
+
+
+
 ## String构造方法实现和内存分析
 
 字符串值在创建后不能被改变
@@ -537,9 +545,34 @@ System.out.println(result2);//true
 
 ## 方法
 
-charAt(索引)//取字符串中该索引中的字符
+String方法都要用变量，来接收改变之后的字符串
 
-length()//字符串中字符长度
+```java
+String str = "AbCd你好";
+//取字符串中该索引中的字符
+str.charAt(索引);//
+//字符串中字符长度
+str.length();
+//字符串转大写
+str.toUpperCase();//ABCD你好
+//字符串转小写
+str.toLowerCase();//abcd你好
+//忽略大小写进行比较
+str.equalsIgnoreCase("ABCD你好");//true
+//判断某个字符串开头或结尾
+str.startsWith("Ab");//true
+
+
+//jdk新增的一系列的strip方法
+String s1 = "       abc     ";
+//去除首尾 -> trim
+System.out.println(s1.strip());//(abc)
+//去除首尾空格
+System.out.println(s1.stripLeading());//(abc    )
+//去除尾空格
+System.out.println(s1.stripTrailing());//(       abc)
+//System.out.println(s1.stripIndent());
+```
 
 ## StringBuilder对象
 
@@ -558,7 +591,12 @@ length()//字符串中字符长度
 | public int length()                   | 返回长度(字符出现的个数)                            |
 | public String toString()              | 通过toString()就可以实现把StringBuilder转换为String |
 
-打印SB对象输出的不是地址值而是属性值
+## 打印输出
+
+```java
+//打印SB对象输出的不是地址值而是属性值
+System.out.println();//自动调用引用数据类型的toString()方法
+```
 
 ![](assest/JAVA.assest/20240417112053.png)
 
@@ -644,22 +682,15 @@ JDK8版本:系统会预估要字符串拼接之后的总大小，把要拼接的
 
 ##  ArrayList
 
-| 方法名               | 说明                                |
-| -------------------- | ----------------------------------- |
-| boolean add(E e)     | 添加元素，返回值表示是否添加成功    |
-| boolean remove(E e)  | 删除指定元素,返回值表示是否删除成功 |
-| E remove(int index)  | 删除指定索引的元素,返回被删除元素   |
-| E set(int index,E e) | 修改指定索引下的元素,返回原来的元素 |
-| E get(int index)     | 获取指定索引的元素                  |
-| int size()           | 集合的长度，也就是集合中元素的个数  |
-
-
-
 
 ```java
+//集合是jdk1.2引入的->1.5引入泛型->1.7菱形推断语法(只写前面泛型，后面自动推断)
 //泛型：限定集合中存储的数据类型
 ArrayList<String> list = new ArrayList<String>();//jdk7之前
 ArrayList<String> list = new ArrayList<>();
+```
+
+```java
 //打印对象不是地址值，二十集合中存储的内容
 System.out.println(list);//[]
 list.add("aaa");
@@ -672,6 +703,15 @@ String result = list.remove(0);//返回被删除的元素
 String result = list.set(0,"aaa");//返回被覆盖的元素
 System.out.println(result);//ccc
 ```
+
+| 方法名               | 说明                                |
+| -------------------- | ----------------------------------- |
+| boolean add(E e)     | 添加元素，返回值表示是否添加成功    |
+| boolean remove(E e)  | 删除指定元素,返回值表示是否删除成功 |
+| E remove(int index)  | 删除指定索引的元素,返回被删除元素   |
+| E set(int index,E e) | 修改指定索引下的元素,返回原来的元素 |
+| E get(int index)     | 获取指定索引的元素                  |
+| int size()           | 集合的长度，也就是集合中元素的个数  |
 
 
 
