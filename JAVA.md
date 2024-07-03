@@ -545,7 +545,7 @@ boolean result2=s1.equalsIgnoreCase(s2);
 System.out.println(result2);//true
 ```
 
-## 方法
+## String方法
 
 String方法都要用变量，来接收改变之后的字符串
 
@@ -576,9 +576,9 @@ System.out.println(s1.stripTrailing());//(       abc)
 //System.out.println(s1.stripIndent());
 ```
 
-## StringBuilder对象
+## StringBuilder
 
-概述：StringBuilder可以看作一个容器，创建之后里面内容可变
+概述：StringBuilder对象可以看作一个容器，创建之后里面内容可变
 
 作用：提高字符串操作效率
 
@@ -717,7 +717,7 @@ System.out.println(result);//ccc
 
 
 
-# 基本数据类型的包装类
+## 基本数据类型的包装类
 
 |         |           |
 | ------- | --------- |
@@ -1203,8 +1203,6 @@ JDK9：接口中可以定义私有方法。**private 私有方法**分为两种 
 
 ### 接口和类之间的关系
 
-总结：
-
 **类和类**之间的关系：只能单继承，不能多继承
 
 ```java
@@ -1273,34 +1271,151 @@ Insert @Override（默认选中）**插入 @Override**
 
 ## 内部类
 
+定义：
+
+内部类是类中五大成分之一（成员变量、成员方法、构造器、内部类、代码块）
+
+如果一个类定义在另一个类的内部，这个类就是内部类
+
+```java 
+public class Outer{
+	/**
+     * 内部类
+     */
+    public class Inner{
+        
+    }
+}
+```
+
+### 成员内部类
+
+成员内部类是类中的一个普通成员，与成员变量、成员方法平级
+
 ```java
 public class Outer {
     private int a = 200;
     /**
-     * 内部类
+     * 成员内部类
      */
     public class Inner{
         private int a= 100;
 
         public void show(){
             int a = 300;
-            System.out.println(a);
-            System.out.println(Outer.this.a);
-            System.out.println(this.a);
+            System.out.println(a);//300
+            System.out.println(Outer.this.a);//200
+            System.out.println(this.a);//100
         }
     }
 }
 ```
 
 ```java
-Outer.Inner inner = new Outer().new Inner();
-inner.show();
-//300
-//200
-//100
+public static void main(String[] args) {
+    //外部类.内部类 变量名 = new 外部类().new 内部类();
+    Outer.Inner inner = new Outer().new Inner();
+    //调用内部类的方法
+    inner.show();
+}
+```
+
+### 静态内部类
+
+静态内部类，就是在成员内部类中添加static关键字
+
+```java
+public class Outer {
+    private int age = 18;
+    public static String name = "YQiang";
+    /**
+     * 静态内部类
+     */
+    public static class Inner{
+        //静态内部类
+        //可以访问外部类的静态变量
+        //不能访问实例变量
+        public void show(){
+            System.out.println(name);//YQiang
+            //System.out.println(age);//报错
+        }
+    }
+}
+```
+
+```java
+public static void main(String[] args) {
+    //外部类.内部类 变量名 = new 外部类().内部类();
+    Outer.Inner inner = new Outer().Inner();
+    //调用内部类的方法
+    inner.show();
+}
+```
+
+### 局部内部类
+
+局部内部类是定义在方法中的类，和局部变量平级，只能在方法中有效。（毛用没有）
+
+```java
+public class Outer{
+    public void test(){
+        //局部内部类
+        class Inner{
+            public void show(){
+                System.out.println("Inner...show");
+            }
+        }
+        
+        //局部内部类只能在方法中创建对象，并使用
+        Inner inner = new Inner();
+        inner.show();
+    }
+}
+```
+
+### 匿名内部类
+
+没有名字（引用）的对象
+
+#### 匿名内部类的格式
+
+```java
+new 父类/接口(参数值){
+    @Override
+    重写父类/接口的方法;
+}
 ```
 
 
+
+```java
+/**
+ * 函数时接口就是只有一个抽象方法的接口
+ * 一般会加上FunctionalInterface 来标记一下
+ */
+@FunctionalInterface
+public interface ISing {
+    void sing();
+}
+```
+
+```java
+public static void main(String[] args) {
+        /**
+         * 匿名内部类
+         */
+        ISing sing = new ISing(){
+            @Override
+            public void sing() {
+                System.out.println("sing");
+            }
+            public void show(){
+                System.out.println("show");
+            }
+        };
+    	sing.sing();//调用
+    }
+```
 
 # lambda表达式
 
@@ -1326,8 +1441,6 @@ public interface Add {
     int add(int a, int b);
 }
 ```
-
-
 
 ```java
 /**
