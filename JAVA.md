@@ -1375,7 +1375,7 @@ public class Outer{
 
 ### 匿名内部类
 
-没有名字（引用）的对象
+匿名内部类：本质上是没有名字（引用）的子类对象、或者接口的实现对象
 
 #### 匿名内部类的格式
 
@@ -1386,7 +1386,7 @@ new 父类/接口(参数值){
 }
 ```
 
-
+使用案例
 
 ```java
 /**
@@ -1404,18 +1404,28 @@ public static void main(String[] args) {
         /**
          * 匿名内部类
          */
+    	//这里后面new 的部分，其实就是一个Animal的子类对象
+    	//隐含多态性质
         ISing sing = new ISing(){
             @Override
             public void sing() {
-                System.out.println("sing");
+                System.out.println("调用sing方法");
             }
             public void show(){
                 System.out.println("show");
             }
         };
-    	sing.sing();//调用
+    	sing.sing();//调用sing方法
     }
 ```
+
+匿名内部类在编写代码时没有名字，编译后系统会为自动为匿名内部类生产字节码，字节码的名称会以`外部类$1.class`的方法命名
+
+![image-20240704000855309](D:\Cloud\华为云盘\Typora\assest\JAVA.assest\image-20240704000855309.png)
+
+#### 匿名内部类的作用
+
+简化了创建子类对象、实现类对象的书写格式。
 
 # lambda表达式
 
