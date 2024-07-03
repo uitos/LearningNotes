@@ -229,7 +229,7 @@ int[] ageArr = new int[5];
 ## 内存
 
 
-1. jvm内存区域划分几块 ? 堆,栈,方法区
+1. jvm内存区域划分几块 ? 堆,栈,方法区（静态区）
 
 2. 引用数据类型为什么要叫做引用数据类型? 
 		
@@ -444,6 +444,8 @@ this的本质：代表方法调用者的地址值
 ## 构造方法
 
 作用：创建对象的时候，虚拟机会自动调用构造方法，作用是给成员变量进行初始化的
+
+构造方法默认调用
 
 ## 标准的JavaBean类
 
@@ -715,8 +717,6 @@ System.out.println(result);//ccc
 
 
 
-
-
 # 基本数据类型的包装类
 
 |         |           |
@@ -744,18 +744,20 @@ static表示静态，是java中的一个修饰符，可以修饰成员方法，�
 
 - 被所有类对象共享
 
-调用方式
+调用方式 
 
 - 类名调用（推荐）
 - 对象名调用
 
-单独存放的静态变量的空间叫**静态区**
+单独存放的静态变量的空间叫**静态区**（类信息）
 
 静态区存放着这个类所有静态变量
 
 **静态变量是随着类的加载而加载的，优先于对象出现**
 
 ![](assest/JAVA.assest/20240417143841.png)
+
+
 
 ### 静态方法
 
@@ -766,15 +768,47 @@ static表示静态，是java中的一个修饰符，可以修饰成员方法，�
 - 多用在测试类和工具类中
 - Javabean类很少用
 
+## Util工具类
+
+### 工具类的规范
+
+1. 名字要以Util结尾
+2. 构造器私有化（为了不能实例化或被创建对象）
+3. 工具类中一般只有静态方法
+
+```java
+public static class MyUtil{
+    private MyUtil(){
+        
+    }
+    public static void print(String s){
+        System.out.println(s);
+    }
+    //.....
+}
+```
+
+### 调用格式
+
+```java
+//类名.方法(实参);
+```
+
 ## 继承
 
 ### 什么是继承、继承的好处、什么时候用?
 
 继承是面向对象三大特征之一，可以让类与类之间产生父子关系
 
-可以把多个子类中重复的代码抽取到父类中，子类可以直接使用，减少代码陈宇，提高代码复用性
+可以把多个子类中重复的代码抽取到父类中，子类可以直接使用，减少代码沉余，提高代码复用性
 
 当类与类之间，存在相同（共性）的内容，且、并满足子类是父类的一种，就可以考虑使用继承，优化代码
+
+### 优缺点
+
+提高复用性，便于维护
+
+降低了子类的独立性，父类更改属性和行为所有子类都更改属性和行为
 
 ### 继承的格式
 
@@ -813,7 +847,7 @@ Object有五个虚方法，虚方法表中没有的成员方法，能继承，�
 
 每个类都有自己的虚方法表，添加子类非private、static、final修饰的方法和父类虚方法表中的方法
 
-### 继承中：成员变量的特点
+### 继承中：成员变量的访问特点
 
 继承中成员变量的特点 ：就近原则
 
@@ -834,10 +868,52 @@ class Zi extends Fu{
 }
 ```
 
-### 继承中成员方法的访问特点
+### 继承中：成员方法的访问特点
 
 this调用:就近原则。
 super调用:直接找父类。
+
+
+
+### 继承中：构造器的访问特点
+
+父类的构造方法不会被子类继承
+
+子类中所用的构造方法默认先访问父类的无参构造，在执行自己
+
+#### 为什么？
+
+子类在初始化的时候，可能会用到父类当中的数据，如果父类没有完成初始化，子类将无法使用父类中的数据
+
+子类初始化之前，一定要先调用父类构造方法完成父类数据空间的初始化
+
+#### 怎么调用父类构造方法的？
+
+子类构造方法的第一行语句默认都是：super（），不写也存在，且必须在第一行
+
+### this和super使用区别
+
+相同点：super与this 都能调用构造器，成员变量以及成员方法
+
+​				super与this调用构造器必须在构造器里面
+
+​				且一定要放在第一行
+
+不同点：super调用父类的public的成员
+
+​				this调用本类的成员
+
+```java
+public Cat(String name, int age, String gender){
+    //System.out.println(123);报错
+    //this();报错
+    super(name, age, gender);
+    super.run();
+    this.run();
+}
+```
+
+
 
 ### 方法的重写
 
@@ -867,33 +943,25 @@ super调用:直接找父类。
 
 **5.只有被添加到虚方法表中的方法才能被重写**
 
-### 继承中构造的访问特点
 
-父类的构造方法不会被子类继承
-
-子类中所用的构造方法默认先访问父类的无参构造，在执行自己
-
-#### 为什么？
-
-子类在初始化的时候，可能会用到父类当中的数据，如果父类没有完成初始化，子类将无法使用父类中的数据
-
-子类初始化之前，一定要先调用父类构造方法完成父类数据空间的初始化
-
-#### 怎么调用父类构造方法的？
-
-子类构造方法的第一行语句默认都是：super（），不写也存在，且必须在第一行
-
-#### this和super使用总结
-
-this：理解为一个变量，表示当前方法调用者的地址值
-
-super：代表父类存储空间
 
 ## 多态
 
+### 学习多态的目的
+
+
+
 ### 什么是多态
 
-对象的多种形态
+对象的多种形态（就是同一个对象在不同情况下的不同形态）
+
+```java
+//普通创建对象 -> 调用子类构造器 指向相应类型
+Cat cat = new Cat();
+//多态创建对象 -> 调用子类的构造器，指向父类的引用-> 原因：在继承前提下，调用子类构造器会先调用父类的构造器
+Animal animal = new Cat();
+Object object = new Cat();
+```
 
 ### 多态的前提
 
@@ -918,14 +986,34 @@ super：代表父类存储空间
 自动类型转换、强制类型转换
 
 ```java
+//向上转型
 Person p=new student();
+//向下转型
 Student s(student)p;
 ```
 
 ### 强制类型转换能解决什么问题?
 
-可以转换成真正的子类类型，从而调用子类独有功能，
 转换类型与真实对象类型不一致会报错
+
+```java
+//抛出java.lang.ClassCastException（类型转换异常）
+```
+
+可以转换成真正的子类类型，从而调用子类独有功能，
+
+```java
+//使用 instanceof 关键字判断是否是真实对象类型
+//父类对象 instanceof 子类
+Animal animal = new Dog();
+if(animal instanceof Dog){
+    //Dog dog = (Dog)animal;
+    //dog.look();
+    (Dog)animal.look();
+}
+```
+
+
 
 ### 多态调用成员
 
@@ -943,6 +1031,8 @@ Student s(student)p;
 
 ![1716175834312](assest/JAVA.assest/1716175834312.png)
 
+
+
 ## 包
 
 ### 包的作用?
@@ -955,13 +1045,18 @@ Student s(student)p;
 
 ## final
 
-1.final修饰方法:最终方法，不能被重写
-2.final修饰类:最终类，不能被继承
-3.final修饰变量:是常量，不能被修改
+final关键字是最终的意思，可以修饰类、修饰方法、修饰变量。
 
+```java
+- final修饰类：最终类，不能被继承
+- final修饰方法：最终方法，不能被重写
+- final修饰变量：是常量，不能被修改（不能再重新赋值）
+//修饰变量
 基本数据类型:变量的值不能修改
-
 引用数据类型:地址值不能修改，内部的属性值可以修改
+```
+
+
 
 ## 权限修饰符的分类
 
@@ -1042,17 +1137,49 @@ public abstract class 类名{}
 
 抽象类的子类 1. 要么重写抽象类中的所有抽象方法 2. 要么是抽象类
 
+
+
 ## 接口
 
-接口关键字interface
+### 接口的作用
 
-​	public interface 接口名{}
+1. 定义规范 -> 解决代码的维护性问题
 
-接口不能实例化
+2. 定义抽象行为 -> 解决了单继承的缺点，接口时多实现的，而且接口与接口之间时多继承的
+3. 标记性作用 -> jdk中有很多标记性接口，这些接口只有名称，没有任何内容，用于区分类与类之间的作用
+4. 方便定义常量 -> 因为接口中的常量默认被 public、static、final修饰 
+5. 函数式接口 -> 实现lamba表达式，取代匿名内部类
 
-接口和类之间是实现关系，通过implements关键字表示
+### interface
 
-​	public class implements 接口名{}
+接口的定义格式（接口不能**实例化**（**创建对象**），所以没有构造方法）
+
+```java
+public interface 接口名{
+    //成员变量（常量）
+    //成员方法（抽象方法）
+}
+```
+
+```java
+public interface A{
+    //成员变量->默认被public static final修饰符修饰
+    //public static final String SCHOOL_NAME = "常量";
+    String SCHOOL_NAME = "常量";
+    
+    //成员方法->默认被public abstract修饰符修饰
+    //public abstract void test();
+    void test();
+}
+```
+
+### implements
+
+接口和类之间是实现关系，或者说接口是用来被类实现的，通过implements关键字表示
+
+```java
+public class implements 接口名{}
+```
 
 接口的子类(实现类)
 
@@ -1062,34 +1189,73 @@ public abstract class 类名{}
 
 ### 接口中成员的特点
 
-成员变量 
+成员变量  默认修饰符 **public static final**
 
-​	只能是常量 
+构造方法  **没有**
 
-​	默认修饰符 public static final
+成员方法  默认修饰符: **public abstract**
 
-构造方法  
+JDK7及以前 ：接口中只能定义抽象方法
 
-​	没有
+JDK8：接口中可以定义有方法体的方法，**默认default、静态static**
 
-成员方法 
-
-​	只能是抽象方法 2. 默认修饰符: public abstract
-
-JDK7以前 ：接口中只能定义抽象方法
-
-JDK8：接口中可以定义有方法体的方法，默认default、静态static
-
-JDK9：接口中可以定义私有方法。private
-私有方法分为两种 普通的私有方法   静态的私有方法
+JDK9：接口中可以定义私有方法。**private 私有方法**分为两种 普通的私有方法   静态的私有方法
 
 ### 接口和类之间的关系
 
-类和类之间的关系：只能单继承，不能多继承
+总结：
 
-类与接口的关系: 实现关系，可以单实现，可多实现，继承一个类的同时实现多接口
+**类和类**之间的关系：只能单继承，不能多继承
 
-接口和接口的关系：继承关系，可以单继承，也可以多继承
+```java
+class Fu{}
+public Zi extends Fu{}
+```
+
+**类与接口**的关系: 实现关系，可以单实现，可多实现，继承一个类的同时实现多接口
+
+```java
+interface Inter1{
+    void show();
+}
+interface Inter2{
+    void show();
+}
+public class Impl implements Inter1, Inter2{
+    @Overrid
+    void show(){
+        System.out.println("实现接口里的方法");
+    }
+}
+```
+
+**接口和接口**的关系：继承关系，可以单继承，也可以多继承
+
+```java
+interface Inter1{}
+interface Inter2{}
+public interface Inter extends Inter1, Inter2{}
+```
+
+### IDEA接口实现类Select Methods to lmplement 界面
+
+<img src="D:\Cloud\华为云盘\Typora\assest\JAVA.assest\image-20240701193553231.png" alt="image-20240701193553231" style="zoom:67%;" />
+
+Select Methods to lmplement 选择要实现的方法
+
+<img src="D:\Cloud\华为云盘\Typora\assest\JAVA.assest\image-20240701193609408.png" alt="image-20240701193609408" style="zoom:67%;" />
+
+Copy javaDoc **生成注释文档**
+
+Generate missed JavaDoc **生成遗漏的注释文档**
+
+Insert @Override（默认选中）**插入 @Override**
+
+
+
+### 标记性接口（空接口）
+
+
 
 ### 适配器设计模式
 
@@ -1105,4 +1271,105 @@ JDK9：接口中可以定义私有方法。private
 
 为了避免其他类创建适配器类的对象，中间的适配器类用abstract进行修饰
 
-1
+## 内部类
+
+```java
+public class Outer {
+    private int a = 200;
+    /**
+     * 内部类
+     */
+    public class Inner{
+        private int a= 100;
+
+        public void show(){
+            int a = 300;
+            System.out.println(a);
+            System.out.println(Outer.this.a);
+            System.out.println(this.a);
+        }
+    }
+}
+```
+
+```java
+Outer.Inner inner = new Outer().new Inner();
+inner.show();
+//300
+//200
+//100
+```
+
+
+
+# lambda表达式
+
+### lambda省略模式
+
+```java
+@FunctionalInterface
+public interface ISingWithParam {
+    void sing(String song,String place);
+}
+```
+
+```java
+@FunctionalInterface
+public interface IPlay {
+    void play(String gameName);
+}
+```
+
+```java
+@FunctionalInterface
+public interface Add {
+    int add(int a, int b);
+}
+```
+
+
+
+```java
+/**
+ * lambda表达式省略模式
+ */
+public static void main(String[] args) {
+    //省略模式1，参数类型可以省略，但是要省略就全部省略
+    //ISingWithParam sing = (String song, String place) -> {};
+    ISingWithParam sing = (song, place) -> {
+        System.out.println("在" + place + "唱了" + song);
+    };
+    sing.sing("千里之外", "黑马KTV");
+    //省略模式2：参数只有一个，小括号也可以省略
+    IPlay play = gameName -> {
+        System.out.println("玩" + gameName);
+    };
+    play.play("CF");
+    //省略模式3；方法体如果只有一条语句，大括号可以省略
+    //如果方法有返回值，必须得写return，如果有只一条return语句，return也可以省略
+    Add add = (a, b) -> a = b;
+    add.add(2, 3);
+}
+//输出
+//在黑马KTV唱了千里之外
+//玩CF
+```
+
+
+
+# 常用API
+
+# 异常
+
+# 集合
+
+# stream流
+
+# IO流
+
+# 网络
+
+# 基础加强
+
+# 设计模式
+
