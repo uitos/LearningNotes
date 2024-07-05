@@ -1,4 +1,32 @@
+# JDK新增
 
+
+
+## JDK11
+
+新增String的strip()、isBlank()、isEmpty()
+
+```java
+String ss = " ";
+System.out.println(ss.isBlank());//true
+System.out.println(ss.isEmpty());//false
+```
+
+# 面试题
+
+## ==与equals的区别
+
+==
+
+比较基本数据类型  ->真实值
+
+比较引用数据类型 ->地址值
+
+equals
+
+不重写 ->  == （Object默认逻辑）
+
+重写 -> 看重写逻辑
 
 # 数据类型
 
@@ -138,7 +166,7 @@ public static void main(String[] args){
 //循环次数不确定 ：优先使用while循环 
 ```
 
-# 随机数Random
+# Random随机数
 
 ```java
 Random r = new Random();
@@ -716,19 +744,6 @@ System.out.println(result);//ccc
 | int size()           | 集合的长度，也就是集合中元素的个数  |
 
 
-
-## 基本数据类型的包装类
-
-|         |           |
-| ------- | --------- |
-| byte    | Byte      |
-| short   | Short     |
-| char    | Character |
-| int     | Integer   |
-| long    | Long      |
-| float   | Float     |
-| double  | Double    |
-| boolean | Boolean   |
 
 # 面向对象进阶
 
@@ -1429,25 +1444,30 @@ public static void main(String[] args) {
 
 # lambda表达式
 
-### lambda省略模式
+JDK8新增的一种语法形式，叫做Lambda表达式
+
+## 作用
+
+用于简化匿名内部类代码的书写
+
+## lambda省略模式
 
 ```java
+/**
+ * 函数式接口@FunctionalInterface注解
+ * 前提：有且仅有一个抽象方法，但是可以有多个非抽象方法的接口
+ * 
+ */
 @FunctionalInterface
 public interface ISingWithParam {
     void sing(String song,String place);
 }
-```
-
-```java
 @FunctionalInterface
-public interface IPlay {
+interface IPlay {
     void play(String gameName);
 }
-```
-
-```java
 @FunctionalInterface
-public interface Add {
+interface Add {
     int add(int a, int b);
 }
 ```
@@ -1481,6 +1501,235 @@ public static void main(String[] args) {
 
 
 # 常用API
+
+## System
+
+### exit
+
+System.exit(0);//人为的终止虚拟机。(不要使用)
+
+System.exit(1);
+
+### currentTimeMillis
+
+```java
+//时间戳：时间的整数表示形式
+//时间计算原点：1970.1.1 00:00:00
+long l = System.currentTimeMillis();
+System.out.println(l);//1720165524836
+```
+
+计算程序运行所有时间
+
+```java
+long start = System.currentTimeMillis();
+StringBuilder s = new StringBuilder();
+for (int i = 0; i < 10000000; i++) {
+    s.append(i);
+}
+long end = System.currentTimeMillis() - start;
+System.out.println(end);//147
+```
+
+### arraycopy
+
+```java
+int[] src = {1,2,3,4};
+int[] dest = new int[src.length];
+//数组拷贝
+System.arraycopy(src, 0, dest, 0, src.length);
+for (int i = 0; i < dest.length; i++) {
+    System.out.print(dest[i]);
+}
+//1234
+```
+
+### gc
+
+garbage collection 垃圾收集
+
+```java
+System.gc();
+//native 关键字 表示面向操作系统的本子源码，源码是由c/c++实现的
+```
+
+![image-20240705164231363](D:\Cloud\华为云盘\Typora\assest\JAVA.assest\image-20240705164231363.png)
+
+## Math
+
+## Object
+
+## Objects
+
+```java
+Objects.isNull()
+```
+
+## BigDecimal
+
+为了解决计算精度缺失的问题，java提供了BigDecimal类
+
+```java
+System.out.println(0.1 + 0.2);//0.30000000000000004
+System.out.println(1 / 0.0);//Infinity
+double a = 1;
+double b = 20.2;
+double c = 300.03;
+System.out.println(a + b + c);//321.22999999999996
+```
+
+```java
+//传递double构造器无法解决计算精度问题
+BigDecimal aDecimal = new BigDecimal(a);
+BigDecimal bDecimal = new BigDecimal(b);
+BigDecimal cDecimal = new BigDecimal(c);
+BigDecimal add = aDecimal.add(bDecimal).add(cDecimal);
+System.out.println(add);//321.229999999999972004616211052052676677703857421875
+```
+
+```java
+//JDK1.1引入
+//把double 转成String -> String.valueOf
+BigDecimal aString = new BigDecimal(String.valueOf(a));
+BigDecimal bString = new BigDecimal(String.valueOf(b));
+BigDecimal cString = new BigDecimal(String.valueOf(c));
+BigDecimal sum = aString.add(bString).add(cString);
+System.out.println(sum);//321.23
+```
+
+```java
+//jdk1.5引入的静态方法会自动创建BigDecimal对象并把double转成字符串
+BigDecimal aString = BigDecimal.valueOf(a);
+BigDecimal bString = BigDecimal.valueOf(b);
+BigDecimal cString = BigDecimal.valueOf(c);
+BigDecimal sum = aString.add(bString).add(cString);
+System.out.println(sum);
+```
+
+```java
+BigDecimal a1 = BigDecimal.valueOf(a);
+BigDecimal b1 = BigDecimal.valueOf(b);
+
+// 2、public BigDecimal add(BigDecimal augend): 加法
+BigDecimal c1 = a1.add(b1);
+System.out.println(c1);
+
+// 3、public BigDecimal subtract(BigDecimal augend): 减法
+BigDecimal c2 = a1.subtract(b1);
+System.out.println(c2);
+
+// 4、public BigDecimal multiply(BigDecimal augend): 乘法
+BigDecimal c3 = a1.multiply(b1);
+System.out.println(c3);
+
+// 5、public BigDecimal divide(BigDecimal b): 除法
+BigDecimal c4 = a1.divide(b1);
+System.out.println(c4);
+//使用除法一定要使用带有三个参数（除数，小数，舍入模式）的重载方法
+BigDecimal result = a1.divide(b1, 8, RoundingMode.DOWN);
+```
+
+
+
+## 基本数据包装类
+
+## 基本数据类型以及对应的包装类
+
+| 基本数据类型 | 对应的包装类 |
+| ------------ | ------------ |
+| byte         | Byte         |
+| short        | Short        |
+| char         | Character    |
+| int          | Integer      |
+| long         | Long         |
+| float        | Float        |
+| double       | Double       |
+| boolean      | Boolean      |
+
+### Integer
+
+如何把基本数据类型变成包装类
+
+```java
+//1.如何把基本数据类型变成包装类
+int a = 10;
+//过时的构造方法
+//Integer i = new Integer();
+Integer i = Integer.valueOf(a);
+System.out.println(i);//10
+```
+
+装箱：把基本数据类型转换为对应的包装类类型
+拆箱：把包装类类型转换为对应的基本数据类型   
+
+```java
+//装箱
+Integer b = Integer.valueOf(100);
+Integer c = Integer.valueOf(2000);
+//拆箱
+int i1 = b.intValue();
+int i2 = c.intValue();
+System.out.println(i2 + i1);//2100
+```
+
+自动装拆箱指的是系统底层自动帮我们调用包装类的valueOf()方法
+
+```java
+//自动装箱与拆箱 -> jvm自动调用装箱valueOf方法 以及自动拆箱...value
+Integer d =300;
+Integer e = 500;
+int f =d;
+int g =e;
+System.out.println(d+e);//800
+System.out.println(f-g);//-200
+```
+
+类型转换（字符串与包装类的转化）
+
+```java
+//基本数据类型转字符串 String.valueOf
+String s = String.valueOf(123);
+System.out.println(s);//123
+
+//把字符串转成数值 得是正常的数字字符串
+Integer i = Integer.valueOf("123");
+int i1 = Integer.parseInt("123");
+System.out.println(i);//123
+System.out.println(i1);//123
+
+//获取不到正确的false和true字符 都返回false
+Boolean true1 = Boolean.valueOf("true1");
+boolean b1 = Boolean.parseBoolean("true1");
+System.out.println(true1);//false
+```
+
+包装类比较大小
+
+```java
+//包装类比较大小
+//自动装箱的valueOf方法会缓存[-128,127]之间的常用整数值，因此地址值一样
+//超出这个范围返回 new 一个新对象
+Integer a = Integer.valueOf(127);
+Integer b = Integer.valueOf(127);
+System.out.println(a==b);//true
+System.out.println(a.equals(b));//true
+
+Integer c = Integer.valueOf(128);
+Integer d = Integer.valueOf(128);
+System.out.println(c==d);//false
+System.out.println(c.equals(d));//true
+
+//所有能参与比较的类，都实现了Comparable接口的compareTo 方法
+System.out.println(a.compareTo(b));//0
+//0 相等
+//-1 前小于后
+//1 前大于后
+```
+
+### 基本类型包装类与基本类型的区别
+
+默认值不一样
+内存模型存储位置不一样
 
 # 异常
 
