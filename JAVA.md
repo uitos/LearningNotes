@@ -1506,9 +1506,9 @@ public static void main(String[] args) {
 
 ### exit
 
-System.exit(0);//人为的终止虚拟机。(不要使用)
+System.exit(0);正常退出，程序正常执行结束退出
 
-System.exit(1);
+System.exit(1);是非正常退出，就是说无论程序正在执行与否，都退出，
 
 ### currentTimeMillis
 
@@ -1563,7 +1563,21 @@ System.gc();
 
 ```java
 Objects.isNull()
+
+
 ```
+
+## requireNonNull
+
+检查对象是或否为空，抛出NullPointerException异常
+
+```java
+ int[] arr = null;
+Objects.requireNonNull(arr,"数组不能为空");
+//Exception in thread "main" java.lang.NullPointerException: 数组不能为空
+```
+
+![image-20240706171758582](D:\Cloud\华为云盘\Typora\assest\JAVA.assest\image-20240706171758582.png)
 
 ## BigDecimal
 
@@ -1633,7 +1647,7 @@ BigDecimal result = a1.divide(b1, 8, RoundingMode.DOWN);
 
 ## 基本数据包装类
 
-## 基本数据类型以及对应的包装类
+基本数据类型以及对应的包装类
 
 | 基本数据类型 | 对应的包装类 |
 | ------------ | ------------ |
@@ -1707,7 +1721,7 @@ System.out.println(true1);//false
 
 ```java
 //包装类比较大小
-//自动装箱的valueOf方法会缓存[-128,127]之间的常用整数值，因此地址值一样
+//在自动装箱中，valueOf方法中会缓存[-128,128)之间的常用整数，会复用缓存中的对象，因此，对象地址值一样
 //超出这个范围返回 new 一个新对象
 Integer a = Integer.valueOf(127);
 Integer b = Integer.valueOf(127);
@@ -1731,7 +1745,87 @@ System.out.println(a.compareTo(b));//0
 默认值不一样
 内存模型存储位置不一样
 
-# 异常
+# Arrays
+
+
+
+# Exception异常
+
+## 为什么引入异常
+
+是代码更加健壮，提高用户体验
+
+识别错误并相应错误机制
+
+## Throwable
+
+### Error
+
+#### VirtualMachineError
+
+StackOverFlowError
+
+OutOfMemoryError (OOM)
+
+### Exception
+
+#### RunTimeException
+
+#### ClassNotFountException
+
+异常分类
+
+编译时异常（受检异常）
+
+除RuntimeException之外异常
+
+运行时异常（非受检异常）
+
+RuntimeException及其子类
+
+### Throwable的成员方法
+
+
+
+```java
+public class ThrowAbleDemo {
+    public static void main(String[] args) {
+        method();
+    }
+    public static void method() {
+        try {
+            throw new RuntimeException("运行时异常");
+        }catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }
+    }
+}
+/*
+运行时异常
+java.lang.RuntimeException: 运行时异常
+java.lang.RuntimeException: 运行时异常
+	at com.itheima.day05.exception.ThrowAbleDemo.method(ThrowAbleDemo.java:9)
+	at com.itheima.day05.exception.ThrowAbleDemo.main(ThrowAbleDemo.java:5)
+*/
+```
+
+## 自定义异常
+
+ 
+
+## 面试题
+
+### throw和throws的区别
+
+throws用于方法头，表示的只是异常的声明，而throw用于方法内部，抛出的是异常对象。
+throws可以一次性抛出多个异常，而throw只能一个
+throws抛出异常时，它的上级（调用者）也要申明抛出异常或者捕获，不然编译报错。而throw的话，可以不申明或不捕获（这是非常不负责任的方式）但编译器不会报错。
+
+### finally 的作用
+
+finally代码块，总是在try和任何catch块之后，方法前之前运行，不管是否抛出或捕获异常finally块都会执行
 
 # 集合
 
