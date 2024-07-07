@@ -70,11 +70,11 @@ docker ps命令查看容器运行情况
 
 docker exec -it redis /bin/bash
 
-![](assest/Docker.assest/20240403125316.png)
+![](./images/20240403125316.png)
 
 exit退出容器
 
-![](assest/Docker.assest/20240403125425.png)
+![](./images/20240403125425.png)
 
 ### Docker安装mysql:5.7
 
