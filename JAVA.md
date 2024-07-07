@@ -1745,7 +1745,81 @@ System.out.println(a.compareTo(b));//0
 默认值不一样
 内存模型存储位置不一样
 
-# Arrays
+## Arrays
+
+## 时间
+
+### JDK1.0 java.util下相关类
+
+#### Date
+
+```java
+//date对象代表当前时间
+Date date = new Date();
+System.out.println(date);//Sun Jul 07 11:04:12 CST 2024
+// date.compareTo()
+//获取当前时间毫秒时间戳
+long time = date.getTime();
+System.out.println(time);//1720321452972
+long l = System.currentTimeMillis();//1720321452993
+System.out.println(l);
+```
+
+#### SimpleDateFormat
+
+```java
+Date date = new Date();
+System.out.println(date);//Sun Jul 07 11:05:14 CST 2024
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
+String format = sdf.format(date);
+System.out.println(format);//2024/07/07 11:05:14.723
+//时间字符串转换成事件对象
+String s = "2024/07/07 10:41:20.183";
+try {
+    //声明了一个编译异常，->捕获此编译异常->catch抛出一个运行时异常
+    Date parse = sdf.parse(s);
+} catch (ParseException e) {
+    throw new RuntimeException(e);
+}
+```
+
+#### TimeZone
+
+```java
+TimeZone aDefault = TimeZone.getDefault();
+System.out.println(aDefault.getDisplayName());//中国标准时间
+System.out.println(aDefault.getID());//Asia/Shanghai
+```
+
+### JDK1.8 java.time下相关类
+
+​	LocalDateTime
+​	LocalDate
+​	LocalTime
+​	DateTimeFormatter
+​	Instant
+​	Duration
+
+1.如何获取当前时间？
+
+|        |                                                       |
+| :----: | :---------------------------------------------------: |
+| JDK1.0 |                      new Date();                      |
+| JDK8.0 | LocalTime.now()、LocalDate.now()、LocalDateTime.now() |
+
+2.如何获取时间戳？
+
+|        |                                       |
+| :----: | :-----------------------------------: |
+| JDK1.0 | System.currentTimeMillis()、getTime() |
+| JDK8.0 |                                       |
+
+3.如何进行时间日期的相互转换
+
+|        |      |      |
+| :----: | :--: | :--: |
+| JDK1.0 |      |      |
+| JDK8.0 |      |      |
 
 
 
@@ -1773,13 +1847,13 @@ OutOfMemoryError (OOM)
 
 #### ClassNotFountException
 
-异常分类
+### 异常分类
 
-编译时异常（受检异常）
+#### 编译时异常（受检异常）
 
 除RuntimeException之外异常
 
-运行时异常（非受检异常）
+#### 运行时异常（非受检异常）
 
 RuntimeException及其子类
 
@@ -1828,6 +1902,8 @@ throws抛出异常时，它的上级（调用者）也要申明抛出异常或�
 finally代码块，总是在try和任何catch块之后，方法前之前运行，不管是否抛出或捕获异常finally块都会执行
 
 # 集合
+
+
 
 # stream流
 
