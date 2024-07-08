@@ -46,7 +46,7 @@ docker container prune
 
 # Docker实例
 
-### Docker安装Redis
+## Docker安装Redis
 
 #### 取最新版的 Redis 镜像
 
@@ -76,7 +76,9 @@ exit退出容器
 
 ![](./images/20240403125425.png)
 
-### Docker安装mysql:5.7
+## Docker安装MySQL
+
+### 安装MySQL:5.7
 
 ```shell
 docker pull mysql:5.7
@@ -94,7 +96,7 @@ docker run --name mysql5.7 \
 -d mysql:5.7
 ```
 
-### Docker安装mysql:8.0
+### 安装MySQL:8.0
 
 ```shell
 
@@ -124,7 +126,7 @@ docker run -p 3306:3306 --name mysql8.0 --restart=always --privileged=true \
 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:8.0
 ```
 
-## Docker安装nginx
+## Docker安装Nginx
 
 ```shell
 #拷贝文件

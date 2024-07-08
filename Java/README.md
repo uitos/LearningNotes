@@ -1812,14 +1812,14 @@ System.out.println(aDefault.getID());//Asia/Shanghai
 |        |                                       |
 | :----: | :-----------------------------------: |
 | JDK1.0 | System.currentTimeMillis()、getTime() |
-| JDK8.0 |                                       |
+| JDK8.0 |              toInstant()              |
 
 3.如何进行时间日期的相互转换
 
-|        |      |      |
-| :----: | :--: | :--: |
-| JDK1.0 |      |      |
-| JDK8.0 |      |      |
+|        |    format     | parse |
+| :----: | :-----------: | :---: |
+| JDK1.0 | new SDF(模式) |       |
+| JDK8.0 | DTF.of(模式)  |       |
 
 
 
