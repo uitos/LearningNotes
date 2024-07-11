@@ -77,7 +77,3 @@ commit message = subject + ：+ 空格 + message 主体
 
 
 
-
-
-<iframe src="https://www.xmind.net/embed/bFv5HU"  width=100% height="540px"></iframe>
-
