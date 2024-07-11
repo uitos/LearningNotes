@@ -1,6 +1,10 @@
+# 目录
+
+[TOC]
+
+
+
 # JDK新增
-
-
 
 ## JDK11
 
@@ -613,7 +617,9 @@ str.toLowerCase();//abcd你好
 str.equalsIgnoreCase("ABCD你好");//true
 //判断某个字符串开头或结尾
 str.startsWith("Ab");//true
-
+//字符拆分   特殊字符需要转义  符号前加\\  如\\$
+String str1 = "1,2,3,4,5"
+System.out.println(str1.split(",")[0])
 
 //jdk新增的一系列的strip方法
 String s1 = "       abc     ";
@@ -1581,6 +1587,54 @@ System.gc();
 
 ## Math
 
+| Math类提供的常见方法                                         |                                   |
+| ------------------------------------------------------------ | --------------------------------- |
+| public static int abs(int a)<br />public static double abs(double a) | 取绝对值（拿到的结果一定是正数）  |
+| public static double ceil(double a)<br />public static double floor | 向上取整<br />向下取整            |
+| public static long round(double a)                           | 四舍五入                          |
+| public static int max(int a, int b)<br />public static int min(int a, int b) | 取较大值<br />取较小值            |
+| public static double pow(double a, double b)                 | 取次方                            |
+| public static double random()                                | 取随机数 [0.0 , 1.0) (包前不包后) |
+
+
+
+```java
+public class MathTest {
+    public static void main(String[] args) {
+        // 目标：了解下Math类提供的常见方法。
+        // 1、public static int abs(int a)：取绝对值（拿到的结果一定是正数）
+        System.out.println(Math.abs(-12)); // 12
+        System.out.println(Math.abs(123)); // 123
+        System.out.println(Math.abs(-3.14)); // 3.14
+
+        // 2、public static double ceil(double a): 向上取整
+        System.out.println(Math.ceil(4.0000001)); // 5.0
+        System.out.println(Math.ceil(4.0)); // 4.0
+
+        // 3、public static double floor(double a): 向下取整
+        System.out.println(Math.floor(4.999999)); // 4.0
+        System.out.println(Math.floor(4.0)); // 4.0
+
+        // 4、public static long round(double a)：四舍五入
+        System.out.println(Math.round(3.4999)); // 3
+        System.out.println(Math.round(3.50001)); // 4
+
+        // 5、public static int max(int a, int b)：取较大值
+        //   public static int min(int a, int b)：取较小值
+        System.out.println(Math.max(10, 20)); // 20
+        System.out.println(Math.min(10, 20)); // 10
+
+        // 6、 public static double pow(double a, double b)：取次方
+        System.out.println(Math.pow(2, 3)); // 2的3次方   8.0
+        System.out.println(Math.pow(3, 2)); // 3的2次方   9.0
+
+        // 7、public static double random()： 取随机数 [0.0 , 1.0) (包前不包后)
+        System.out.println(Math.random());
+    }
+}
+```
+
+
 ## Object
 
 toStirng
@@ -1599,11 +1653,7 @@ equals
 
 工具类
 
-```java
-Objects.isNull()
 
-
-```
 
 | 方法名                                            | 说明                                           |
 | ------------------------------------------------- | ---------------------------------------------- |
@@ -1611,13 +1661,19 @@ Objects.isNull()
 | public  static boolean isNull(Object obj)         | 判断对象是否为null，为null返回true ,反之       |
 | public  static boolean nonNull(Object obj)        | 判断对象是否不为null，不为null则返回true, 反之 |
 
+### equals
 
+![image-20240711102310890](images/image-20240711102310890.png)
 
-![image-20240711100434429](./images/image-20240711100434429.png)
+### isNull
 
-![image-20240711100638021](D:\Cloud\华为云盘\Typora\Java\images\image-20240711100638021.png)
+![image-20240711102150356](images/image-20240711102150356.png)
 
-## requireNonNull
+### nonNull
+
+![image-20240711101959474](images/image-20240711101959474.png)
+
+### requireNonNull
 
 检查对象是或否为空，抛出NullPointerException异常
 
@@ -1627,7 +1683,7 @@ Objects.requireNonNull(arr,"数组不能为空");
 //Exception in thread "main" java.lang.NullPointerException: 数组不能为空
 ```
 
-![image-20240706171758582](./images/image-20240706171758582.png)
+![image-20240711102412840](images/image-20240711102412840.png)
 
 ## BigDecimal
 
@@ -1695,7 +1751,7 @@ BigDecimal result = a1.divide(b1, 8, RoundingMode.DOWN);
 
 
 
-## 基本数据包装类
+## 包装类
 
 基本数据类型以及对应的包装类
 
@@ -1817,7 +1873,54 @@ System.out.println(a.compareTo(b));//0
 
 ## Arrays
 
-## 时间
+Arrays的常用方法
+
+| 方法名                                           | 说明                               |
+| ------------------------------------------------ | ---------------------------------- |
+| public static String toString(int[] a)           | 返回指定数组的内容的字符串表示形式 |
+| public static void sort(int[] a)                 | 按照数字顺序排列指定的数组         |
+| public static int binarySearch(int[] a, int key) | 利用二分查找返回指定元素的索引     |
+
+```java
+public class MyArraysDemo {
+      public static void main(String[] args) {
+          //返回指定数组的内容的字符串表示形式
+          int [] arr1 = {3,2,4,6,7};
+          System.out.println(Arrays.toString(arr1));//[3, 2, 4, 6, 7]
+
+          //按照数字顺序排列指定的数组
+          int [] arr2 = {3,2,4,6,7};
+          Arrays.sort(arr2);
+          System.out.println(Arrays.toString(arr2));//[2, 3, 4, 6, 7]
+
+          //利用二分查找返回指定元素的索引
+          int [] arr3 = {1,2,3,4,5,6,7,8,9,10};
+          int index = Arrays.binarySearch(arr3, 0);
+          System.out.println(index);//-1
+          //使用二分查找的要求
+          //1,数组必须有序
+          //2.如果要查找的元素存在,那么返回的是这个元素实际的索引
+          //3.如果要查找的元素不存在,那么返回的是 (-插入点-1)
+              //插入点:如果这个元素在数组中,他应该在哪个索引上.
+      }
+  }
+```
+
+
+
+## Time时间
+
+1. 计算机中时间原点（UNIX操作系统,C语言的诞生日）
+
+   1970年1月1日 00:00:00
+
+2. 时间换算单位
+
+   1秒 = 1000毫秒
+
+   1毫秒 = 1000微秒
+
+   1微秒 = 1000 纳秒
 
 ### JDK1.0 java.util下相关类
 
@@ -1863,12 +1966,136 @@ System.out.println(aDefault.getID());//Asia/Shanghai
 
 ### JDK1.8 java.time下相关类
 
-​	LocalDateTime
-​	LocalDate
-​	LocalTime
-​	DateTimeFormatter
-​	Instant
-​	Duration
+​	LocalDateTime LocalDate LocalTime
+
+```java
+LocalDateTime now = LocalDateTime.now();
+System.out.println(now);//2024-07-11T15:49:20.269742400
+System.out.println(LocalDate.now());//2024-07-11
+System.out.println(LocalTime.now());//15:49:20.270739300
+```
+
+
+
+#### DateTimeFormatter 格式化类
+
+时间格式化
+
+```java
+LocalDateTime now = LocalDateTime.now();
+System.out.println(now);//2024-07-11T15:49:20.269742400
+
+//1.创建一个日期时间格式化器对象出来
+DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+//2.对时间格式化
+String format2 = dtf.format(now);// 正向格式化
+System.out.println(format2);//2024-07-11 15:55:28
+String format1 = now.format(dtf);// 反向格式化
+System.out.println(format1);//2024-07-11 15:55:28
+
+LocalDate localDate = LocalDate.now();
+System.out.println(localDate);//2024-07-11
+//System.out.println(localDate.format(dtf));//报错,因为格式不匹配
+//java.time.temporal.UnsupportedTemporalTypeException: Unsupported field: HourOfDay
+
+```
+
+解析时间(字符串转时间)
+
+```java
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss");
+// 3、解析时间：解析时间一般使用LocalDateTime提供的解析方法来解析。
+String dateStr = "2029年12月12日 12:12:11";
+LocalDateTime ldt = LocalDateTime.parse(dateStr, formatter);
+System.out.println(ldt);//2029-12-12T12:12:11
+
+
+String dateStr2 = "2024-07-11 15:55:28";
+LocalDateTime ldt2 = LocalDateTime.parse(dateStr2, formatter);
+System.out.println(ldt2);//报错   要转换的日期字符串格式和指定的日期格式对不上。
+//java.time.format.DateTimeParseException: Text '2024-07-11 15:55:28' could not be parsed at index 4
+```
+
+
+
+![image-20240711155356900](images/image-20240711155356900.png)
+
+
+
+#### Instant 时间戳类 (某一时刻)
+
+相较于 System.currentTimeMillis()获取到【毫秒】，Instant 可以更为精确的获取到【纳秒】。
+
+![1667401373923](images/1667401373923.png)
+
+```java
+
+/*
+Instant 类的常用API 就是获取时间戳了
+* Instant 类的 getEpochSecond () :获取的是秒
+* Instant 类的 toEpochMilli () :获取的是毫秒，同 System.currentTimeMillis()
+* Instant 类的 getNano () :获取的是纳秒，更精确了
+*/
+
+//获取此刻时间信息,不可变对象 零时区
+Instant now = Instant.now();
+System.out.println(now);//2024-07-11T06:31:41.256419500Z
+
+//获取总秒数
+System.out.println(now.getEpochSecond());
+//获取总毫秒数  同 System.currentTimeMillis()
+System.out.println(now.toEpochMilli());
+//获取纳秒数   不够1秒的纳秒数
+System.out.println(now.getNano());
+
+//时刻与时区无关的概念
+//要获取某一时区的时刻时 ,要指定一下时区
+//如果获取的时刻是1754667260000,不同的时区代表着不同的时间
+
+//自定义时间
+LocalDateTime localDateTime = LocalDateTime.of(2025, 8, 8, 15, 34, 20);
+Instant instant = localDateTime.toInstant(ZoneOffset.UTC);
+System.out.println(instant.toEpochMilli());//1754667260000
+```
+
+Instant对象的作用
+
+做代码的性能分析，或者记录用户的操作时间点
+
+
+
+
+
+#### Duration 时间日期区间类
+
+![1667401938724](images/1667401938724.png)
+
+```java
+public class Test8_Duration {
+    public static void main(String[] args) {
+        LocalDateTime start = LocalDateTime.of(2025, 11, 11, 11, 10, 10);
+        LocalDateTime end = LocalDateTime.of(2025, 11, 11, 11, 11, 11);
+        // 1、得到Duration对象
+        Duration duration = Duration.between(start, end);
+
+        // 2、获取两个时间对象间隔的信息
+        System.out.println(duration.toDays());// 间隔多少天
+        System.out.println(duration.toHours());// 间隔多少小时
+        System.out.println(duration.toMinutes());// 间隔多少分
+        System.out.println(duration.toSeconds());// 间隔多少秒
+        System.out.println(duration.toMillis());// 间隔多少毫秒
+        System.out.println(duration.toNanos());// 间隔多少纳秒
+
+    }
+}
+```
+
+
+
+
+
+### JDK1.0和JDK1.8的操作时间
 
 1.如何获取当前时间？
 
@@ -1886,10 +2113,14 @@ System.out.println(aDefault.getID());//Asia/Shanghai
 
 3.如何进行时间日期的相互转换
 
-|        |    format     | parse |
-| :----: | :-----------: | :---: |
-| JDK1.0 | new SDF(模式) |       |
-| JDK8.0 | DTF.of(模式)  |       |
+**SDF**指的是**SimpleDateFormat**
+
+**DTF**指的是**DateTimeFormatter**
+
+|        | format    (格式化时间) | parse    (解析时间) |
+| :----: | :--------------------: | :-----------------: |
+| JDK1.0 |     new SDF(模式)      |                     |
+| JDK8.0 |      DTF.of(模式)      |                     |
 
 
 
@@ -1972,6 +2203,26 @@ finally代码块，总是在try和任何catch块之后，方法前之前运行�
 # 集合
 
 迭代循环
+
+## 集合继承体系
+
+- Iterable
+  		Collection(单列)
+  				List(重复)
+  						ArrayList
+  						LinkedList
+  				~~Vector~~
+  						~~Stack~~
+  				Set（不重复）
+  						HashSet
+  						TreeSet
+  				~~Queue~~
+- Map(双列)
+  			HashTable
+  			HashMap(无序）
+  			TreeMap(有序)
+
+
 
 ## 泛型
 
