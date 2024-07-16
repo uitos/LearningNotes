@@ -1526,6 +1526,27 @@ public static void main(String[] args) {
 //玩CF
 ```
 
+## 方法引用
+
+```java
+/*
+lambda表达式方法引用的使用前提:
+1.lambda表达式方法体内只存在一条语句,并这条语句是在调用某个方法
+2.该方法与函数式接口的参数列表和返回值一致时可以替换成方法引用
+本质上简化了lambda表达式的参数传递
+*/
+```
+
+## 构造器引用
+
+```java
+/*
+lambda表达式构造方法引用使用前提
+1.lambda表达式方法体只有一条语句，并且这条语句输在调用某个构造器
+2.该构造器的参数列表与函数式接口参数的参数列表一致时可以替换成构造方法引用  类名(构造器名).::new
+*/
+```
+
 
 
 # 常用API
@@ -2208,19 +2229,19 @@ finally代码块，总是在try和任何catch块之后，方法前之前运行�
 
 - Iterable
   		Collection(单列)
-  				List(重复)
-  						ArrayList
-  						LinkedList
-  				~~Vector~~
-  						~~Stack~~
-  				Set（不重复）
-  						HashSet
-  						TreeSet
-  				~~Queue~~
+    				List(重复)
+    						ArrayList
+    						LinkedList
+    				~~Vector~~
+    						~~Stack~~
+    				Set（不重复）
+    						HashSet
+    						TreeSet
+    				~~Queue~~
 - Map(双列)
   			HashTable
-  			HashMap(无序）
-  			TreeMap(有序)
+        			HashMap(无序）
+        			TreeMap(有序)
 
 
 
@@ -2282,7 +2303,15 @@ hash(哈希):是由hash算法对任意的输入产生一个整数，并且值是
 
 实现Comparable<>
 
+
+
+
+
 ## Map
+
+
+
+HashMap,怎么指定初始化大小,为什么要指定初始化大小
 
 ### 接口中的方法
 
@@ -2314,14 +2343,15 @@ reverse反转
 
 ## 可变参数
 
-### 不可变集合
+## 不可变集合
 
-JDK9新增
+JDK9新增，只要不是new出来的集合对象,基本上都是不可变集合
 
 创建List不可变集合
 
 ```java
 //创建List不可变集合
+//List<Integer> integerList = Arrays.asList(1, 2, 3, 4, 5, 6);
 List<Integer> integerList = List.of(1, 2, 3, 4, 5, 6);
 integerList.forEach(System.out::println);
 integers.add(7);//Exception in thread "main" java.lang.UnsupportedOperationException
@@ -2367,7 +2397,217 @@ JDK1.5引用
 
 # Stream流
 
+面向函数的编程风格
+
+缺点 不便于Debug调式
+
+
+
+## 执行过程
+
+首先要开启流
+
+中间操作
+
+最后终止流
+
+
+
+reduce 规约/折叠 
+
+# File
+
+
+
+## 为什么要学习File?
+
+​	实现对文件或者文件夹的操作
+​		创建
+​		删除
+​		复制
+​		判断文件是否存在
+
+本质式对某个文件或某个文件夹路径的一个抽象
+
+## 使用
+
+​	File(String pathName)
+​	File(String parent,String child)
+​	File(File file,String child)
+
+```java
+// \是特殊字符，需要转义
+// windows \\
+//mac linux /
+//jdk1.5之后，目录分隔符都用 /
+File file = new File("D:/a.txt");
+try {
+    //创建新文件
+    System.out.println(file.createNewFile());
+    //获取文件名
+    System.out.println(file.getName());
+    //判断文件/文件夹是不是存在
+    System.out.println(file.exists());
+} catch (IOException e) {
+    throw new RuntimeException(e);
+}
+```
+
+```java
+File file = new File("G:/aaa");
+//创建目录/文件夹  mkdir = make directory
+//mkdir 只能创建单级目录
+file.mkdir();
+//创建多级目录
+file = new File("G:/aaa/bbb");
+file.mkdirs();
+//只能删除文件和空文件夹
+file = new File("G:/aaa/a.txt");
+file.delete();
+```
+
+```java
+File file = new File("D:/");
+System.out.println(file.isDirectory());
+System.out.println(file.isFile());
+
+String[] list = file.list();
+for (String s : list) {
+    System.out.println(s);
+}
+/*
+true
+false
+$RECYCLE.BIN
+ALearningResource
+Cloud
+Documents
+Downloads
+Greenware
+Program Files
+Program Files (x86)
+System Volume Information
+Videos
+*/
+```
+
+```java
+//从工作目录中补全相对路径
+File file = new File("resource");
+file.mkdir();
+file = new File("resource/b.txt");
+file.createNewFile();
+```
+
+## 绝对路径与相对路径
+
+- ​	绝对路径
+  ​		**windows**
+  ​			从盘符开始
+  ​				举例:D:/summer/a.txt
+  ​		**linux**或者**Mac**
+  ​			从"根"开始,/代表根目录
+  ​				举例: /User/summer/a.txt
+- ​	相对路径
+  ​		相对于当前项目下的路径
+  ​			模块名/具体文件名
+
 # IO流
+
+以java程序为中心
+
+I：Input 输入》》读取本地磁盘资源到Java程序（内存）
+
+O：Output 输出》》把数据从java程序（内存）输出到本地磁盘
+
+## IO流体系
+
+## 字节流 
+
+富文本文件： excel，word 》》 不仅有文字字符，图片，视频。。。》》字节流
+
+能操作所有类型的文件
+
+- InPutStream
+  1. ByteArrayInputStream 字节数组输入流
+  2. FileInputStream 文件输入流
+  3. ObjectInputStream 对象输入流
+  4. FilterInputStream 过滤输入流
+							DataInputStream 对象输入流
+					BufferedInputStream 缓冲输入流
+
+- OutputStream
+
+  1. ByteArrayOutputStream 字节数组输出流
+2. FileOutputStream 文件输出流
+  3. ObjectOutputStream 对象输出流
+4. FilterOutputStream 过滤输出流
+     ​			DataOutputStream 对象输出流
+   ​			BufferedOutputtStream 缓冲输出流
+
+FileInputStream 文件输入流
+
+```java
+//FileInputStream in = null;
+//try {
+//in = new FileInputStream("resource/b.txt");
+//自动关闭源资源的try方法 jdk1.7引入
+try (FileInputStream in = new FileInputStream("resource/b.txt");) {
+    byte[] bytes = new byte[1024];
+    //read变量的作用：-1 终止读取，不是-1 代表正常每次读取的有效长度
+    int read = 0;
+    while ((read = in.read(bytes)) != -1) {
+        String s = new String(bytes, 0, read);
+
+        System.out.println(s);
+    }
+
+} catch (FileNotFoundException e) {
+    throw new RuntimeException(e);
+} catch (IOException e) {
+    throw new RuntimeException(e);
+}
+//finally {
+//		try {
+// 		   in.close();
+//		} catch (IOException e) {
+//		    throw new RuntimeException(e);
+//		}
+//}
+```
+
+FileOutputStream 文件输出流
+
+```java
+//如果没有文件会自动创建一个文件
+//默认创建的没有开启续写，第二参数指定true就可以
+try (FileOutputStream out = new FileOutputStream("resource/c.txt", true)){
+    String s = "你好";
+    //字符串转字节数组
+    out.write(s.getBytes());
+    out.write("\r\n".getBytes());
+} catch (FileNotFoundException e) {
+    throw new RuntimeException(e);
+} catch (IOException e) {
+    throw new RuntimeException(e);
+}
+```
+
+
+
+
+
+## 字符流
+
+纯文本文件：txr，java。。。 》》 只有字符  》》字符流
+
+仅仅能操作文本文件，例如txt.java文件
+
+磁盘IO
+
+
+
+网络IO
 
 # 网络
 
@@ -2380,3 +2620,5 @@ JDK1.5引用
 每个模式
 
 策略模式
+
+装饰者模式
