@@ -1,4 +1,4 @@
-[JAVA](/JAVA/README.md)
+[Java](/Java/README.md)
 
 
 
