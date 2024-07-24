@@ -52,7 +52,17 @@ LinkedList 数据结构是链表
 
 ## 说一下List常见的数据结构
 
+## java创建线程有几种方式，分别说一下哪几种
 
+[](#面试题)
+
+## 你刚才讲的这几种创建方式有什么不同？
+
+
+
+java线程六种状态
+
+操作系统六种状态
 
 # 数据类型
 
@@ -1547,6 +1557,19 @@ lambda表达式构造方法引用使用前提
 */
 ```
 
+闭包
+
+```java
+List<Integer> integers = List.of(1, 2, 3, 4, 5, 6);
+final int[] a = {10};
+//闭包:在 lambda表达式中使用外界变量时，会给该变量自动加上final
+//使用一个元素的数组解决lambda闭包问题
+integers.forEach(o -> {
+    System.out.println(a[0]++);
+    System.out.println(o);
+});
+```
+
 
 
 # 常用API
@@ -2307,7 +2330,7 @@ hash(哈希):是由hash算法对任意的输入产生一个整数，并且值是
 
 
 
-## Map
+## Map(容器)
 
 
 
@@ -2414,6 +2437,52 @@ JDK1.5引用
 
 
 reduce 规约/折叠 
+
+## 方法
+
+groupingBy
+
+```java
+//groupingBy可以根据返回值灵活定义分组的名字以及分的组数
+Map<String, List<Integer>> collect = integers.stream().collect(Collectors.groupingBy(t -> {
+    if (t >= 0 && t <= 10) {
+        return "1";
+    } else if (t > 10 && t <= 25) {
+        return "2";
+    } else {
+        return "3";
+    }
+}));
+collect.forEach((k, v) -> {
+    System.out.println(k+"="+v);
+});
+/*
+1=[8]
+2=[12, 16, 18]
+3=[30, 45, 60]
+*/
+```
+
+range()
+
+```
+range
+```
+
+## 并行流
+
+```java
+//数组并行流.parallel()
+//stream可以开启并行流进行多线程计算
+long[] array = LongStream.range(1, 500000000).toArray();
+long start = System.currentTimeMillis();
+System.out.println(Arrays.stream(array).parallel().sum());
+long end = System.currentTimeMillis();
+System.out.println(end - start);
+//集合并行流
+List<Long> list = Arrays.stream(array).boxed().toList();
+System.out.println(list.parallelStream().reduce(Long::sum));
+```
 
 # File
 
@@ -2599,7 +2668,7 @@ try (FileOutputStream out = new FileOutputStream("resource/c.txt", true)){
 
 ## 字符流
 
-纯文本文件：txr，java。。。 》》 只有字符  》》字符流
+纯文本文件：txr，java... 》》 只有字符  》》字符流
 
 仅仅能操作文本文件，例如txt.java文件
 
@@ -2609,9 +2678,743 @@ try (FileOutputStream out = new FileOutputStream("resource/c.txt", true)){
 
 网络IO
 
+## 序列化和反序列化
+
+自定义序列化对象 ,对象类必须实现Serializable标记性接口
+
+```java
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Phone implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private String brand;
+    private double price;
+
+    public Phone(String brand, double price) {this.brand = brand;this.price = price;}
+
+    public String getBrand() {return brand;}
+
+    public void setBrand(String brand) {this.brand = brand;}
+
+    public double getPrice() {return price;}
+
+    public void setPrice(double price) {this.price = price;}
+
+    @Override
+    public String toString() {
+        return "Phone{" +
+               "brand='" + brand + '\'' +
+               ", price=" + price +
+               '}';
+    }
+}
+```
+
+序列化
+
+```java
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
+/**
+ * 序列化
+ */
+public class SerializationDemo {
+    public static void main(String[] args) {
+        try (FileOutputStream fo = new FileOutputStream("resource/phone.txt");
+             ObjectOutputStream out = new ObjectOutputStream(fo);) {
+            Phone phone = new Phone("小米", 1999.0);
+            ArrayList<Phone> list = new ArrayList<>();
+            list.add(phone);
+            list.add(phone);
+            out.writeObject(list);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+//�� sr java.util.ArrayListx����a� I sizexp   w   sr %com.itheima.day11.serialization.Phone        D priceL brandt Ljava/lang/String;xp@�<     t 小米q ~ x
+```
+
+反序列化
+
+```java
+import java.io.*;
+import java.util.ArrayList;
+
+/**
+ * 反序列化
+ */
+public class DeSerializationDemo {
+    public static void main(String[] args) {
+        try (FileInputStream fi = new FileInputStream("resource/phone.txt");
+             ObjectInputStream in = new ObjectInputStream(fi);) {
+            ArrayList<Phone> o = (ArrayList<Phone>) in.readObject();
+            System.out.println(o);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+//[Phone{brand='小米', price=1999.0}, Phone{brand='小米', price=1999.0}]
+```
+
+java.io.InvalidClassException异常
+
+```java
+Exception in thread "main" java.lang.RuntimeException: java.io.InvalidClassException: com.itheima.day11.serialization.Phone; local class incompatible: stream classdesc serialVersionUID = 2881963794599405131, local class serialVersionUID = -7536434461589385810
+	at com.itheima.day11.serialization.DeSerializationDemo.main(DeSerializationDemo.java:18)
+Caused by: java.io.InvalidClassException: com.itheima.day11.serialization.Phone; local class incompatible: stream classdesc serialVersionUID = 2881963794599405131, local class serialVersionUID = -7536434461589385810
+```
+
+
+
+## Properties
+
+
+
+```java
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Properties;
+
+public class PropertiesDemo {
+    public static void main(String[] args) {
+        Properties properties = new Properties();
+        properties.setProperty("username", "admin");
+        properties.setProperty("password", "123456");
+        try (FileWriter fileWriter = new FileWriter("resource/user.properties")) {
+            try {
+                //\u6CE8\u91CA unicode编码
+                properties.store(fileWriter, "注释");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+```
+
+```properties
+#\u6CE8\u91CA
+#Fri Jul 19 22:54:16 CST 2024
+password=123456
+username=admin
+```
+
+```java
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
+
+public class PropertiesDemo1 {
+    public static void main(String[] args) {
+        try (FileReader fileReader = new FileReader("resource/account.properties");) {
+            Properties properties = new Properties();
+            properties.load(fileReader);
+            properties.forEach((key, value) -> System.out.println(key + "=" + value));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+/*
+password=123456
+username=admin
+*/
+```
+
+# 线程
+
+## 概念
+
+### 进程与线程
+
+进程与进程之间的堆栈并不共享，线程共享一个进程的堆（但不共享栈）
+
+一个进程，最少有一个线程
+
+**进程**
+
+可以简单的理解为正在运行的程序,是线程的容器
+
+进程是操作系统资源分配的最小单元。一个进程拥有的资源有⾃⼰的堆、栈等资源(例如jvm进程)
+
+**线程**
+
+从属于进程,一个进程可以包含很多个线程
+线程是操作系统能够进行运算调度的最小单元。是进程中实际运行的单位。一个进程中每个线程执行不同的任务 。
+每个java程序至少包含两个线程
+				一个main线程
+				一个垃圾回收线程
+
+### 并发与并行
+
+**并发Concurrent / kənˈkɜːrənt /**
+
+同一时刻有多个任务(指令)在单个Cpu上交替执行》》》针对单核CPU提出
+
+**并行parallel / ˈpærəlel /**
+
+同一时刻有多个任务(指令)在多个CPU上同时执行》》》针对多核CPU提出
+
+### 同步与异步
+
+**同步synchronized / ˈsɪŋkrənaɪzd /**
+
+​		按照顺序一步步执行代码
+
+**异步Future**
+
+​		代码获取结果需要分开执行
+
+## 多线程的实现方式
+
+-    继承Thread类的方式进行实现
+-    实现Runnable接口的方式进行实现
+-    利用Callable和Future接口方式实现
+
+## Thread类中的方法
+
+## 线程优先级
+
+建议优先级，让操作系统尽量优先处理线程
+
+线程优先级
+	setPriority
+	参数为1-10
+
+
+
+## 现实锁
+
+是JUC包下LOCK类库当中的类，需要创建对象
+
+JUC包（并发包）java.util.concurrent包
+
+## 死锁
+
+死锁就是指两个或两个以上的线程在执行过程中，由于竞争资源产生的互相等待资源释放的现象
+
+​	具体原因
+​		互斥条件：一个资源只能被一个线程占有，当这个资源被占有后其他线程就只能等待
+​		不可剥夺条件：当一个线程不主动释放资源时，此资源一直被拥有线程占有
+​		请求并持有条件：线程已经拥有了一个资源后，又尝试请求新的资源
+​		环路等待条件：产生死锁一定是发生了线程资源环形链
+​	解决死锁
+​		改变资源的环路等待，顺序获取锁资源
+
+## 线程安全集合
+
+### JUC包中线程安全的集合
+
+```java
+/*
+单列
+ArrayList/LinkedList -> CopyOnWriteArrayList -> 加同步锁
+HashSet/TreeSet -> CopyOnWriteArraySet
+
+双列
+HashMap/TreeMap/LinkedHashMap -> ConcurrentHashMap -> 加同步锁
+*/
+```
+
+### 非JUC包下的线程安全集合
+
+```java
+/*
+非JUC包下的线程安全集合
+单列 -> vector ->增删改查全加锁
+双列 -> HashTable -> 增删改查全加锁
+ */
+```
+
+![image-20240720171305240](images/image-20240720171305240.png)
+
+# 线程池
+
+java线程六种状态
+
+操作系统线程六种状态
+
+Java中的线程六种状态
+	新建NEW	创建了线程对象new Thread
+	运行中RUNNABLE	调用了start方法
+	阻塞BLOCKED	没有获取到锁对象
+	等待WAITING	调用了wait方法
+	计时等待TIME_WAITING	调用的sleep
+	结束TERMINATED	线程运行结束,run方法运行完毕
+
+```java
+Thread thread = new Thread(() -> {
+System.out.println(123);
+});
+thread.start();
+System.out.println(thread.getState());
+/*
+RUNNABLE
+123
+*/
+```
+
+目的：复用线程
+
+
+
 # 网络
 
-# 基础加强
+## 网络编程三要素
+
+分别是IP地址、端口号、通信协议
+
+1. IP地址：表示设备在网络中的地址，是网络中设备的唯一标识
+2. 端口号：应用程序在设备的唯一标识
+3. 连接和数据在网络中传输的规则
+
+## IP
+
+## 端口
+
+
+
+## 协议
+
+### UDP
+
+​		面向无连接,不可靠协议
+​		速度快,但有大小限制,一次最多传输64k
+​		容易丢失数据
+​		使用报文传输
+
+### TCP
+
+​		面向连接,可靠协议
+​		速度慢,无大小限制
+​		数据安全,不易丢失数据
+​		使用字节流传输
+
+## 计算机通讯三要素
+
+Ip地址
+		设备在网络中的唯一标识
+端口
+		应用程序在设备中的唯一标识
+网络协议
+		数据在网络中传输的规则
+			TCP协议   (Transmission Control Protocol)
+			UDP协议   (User Datagram Protocol)
+
+
+
+Java使用UDP通信
+
+Socket
+
+# 注解
+
+什么是注解
+	对程序进行标注和解释
+
+注解和注释的区别
+	注释
+		给程序员看的
+	注解
+		给编译器看的,标示一些特殊功能
+
+之前使用过的注解
+
+@Deprecated 标记类,方法,属性过时,不建议使用了
+
+@Override
+
+@SuppressWarnings() 压制警告
+
+## 自定义注解
+
+
+
+## 元注解
+
+@Retention
+
+**/ rɪˈtenʃ(ə)n /**
+
+
+
+@Target
+
+**/ ˈtɑːrɡɪt /**
+
+# 日志
+
+为什么引入日志技术?
+	为了解决输出语句的弊端
+		想取消输出语句,只能修改代码
+		打印的内容只能输出在控制台,不能输出到其他位置
+
+日志技术与普通输出语句的区别
+![image-20240720144617403](images/image-20240720144617403.png)
+
+
+
+
+
+# 类加载器
+
+
+
+## 双亲委派模型
+
+
+
+![image-20240723151747614](images/image-20240723151747614.png)
+
+每个类加载器都很懒，加载类时都先让父加载器去尝试加载，父加载器加载不了时自己才去加载。
+
+为什么要双亲委派
+
+
+
+```java
+Class<Teacher> teacherClass = Teacher.class;
+//获取系统类加载器
+ClassLoader classLoader = teacherClass.getClassLoader();
+System.out.println(classLoader);
+//获取平台加载器
+ClassLoader parent = classLoader.getParent();
+System.out.println(parent);
+//获取不到启动类加载器
+ClassLoader parent1 = parent.getParent();
+System.out.println(parent1);
+/*
+//jdk.internal.loader.ClassLoaders$AppClassLoader@2b193f2d
+//jdk.internal.loader.ClassLoaders$PlatformClassLoader@568db2f2
+//null
+*/
+```
+
+
+
+# 反射 reflect
+
+动态获取类的任意属性和方法，以及动态调用对象的任意方法和属性就叫反射
+
+特点 ： 反射忽视修饰符，但目的不是破解私有化属性的
+
+内存角度：直接从堆里获取类的信息
+
+## 反射使用步骤
+
+1. 获取Class对象
+
+2. 获取构造器
+
+3. 获取成员变量/成员方法
+
+获取Class对象的三种方式
+
+```java
+class Apple {
+    private String name;
+    private double price;
+    public void showName(){
+        System.out.println("苹果的名字叫"+name);
+    }
+}
+public class ClassDemo {
+    public static void main(String[] args) throws ClassNotFoundException {
+        //1.forName(全限定名->包名+类名)
+        Class<?> aClass = Class.forName("com.itheima.day15.reflect.Apple");
+        System.out.println(aClass);//class com.itheima.day15.reflect.Apple
+
+        //2.类名.class
+        Class<Apple> appleClass = Apple.class;
+
+        //3.对象.getClass
+        Apple apple = new Apple();
+        Class aClass1 = apple.getClass();
+
+        System.out.println(aClass==appleClass);//true
+        System.out.println(aClass==aClass1);//true
+        
+        System.out.println(aClass);
+        System.out.println(aClass.getPackageName());
+        System.out.println(aClass.getModifiers());
+        System.out.println(aClass.getSimpleName());
+    }
+}
+/*
+true
+true
+class com.itheima.day15.reflect.Apple
+com.itheima.day15.reflect
+1
+Apple
+*/
+```
+
+获取构造器 1.设置访问权限 2.利用获取的构造器对象 newInstance去实例化对象
+
+```java
+class Apple {
+    private String name;
+    private double price;
+
+    public void showName() {
+        System.out.println("苹果的名字叫" + name);
+    }
+
+    private Apple() {
+    }
+
+    public Apple(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Apple{" +
+               "name='" + name + '\'' +
+               ", price=" + price +
+               '}';
+    }
+}
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+public class TestConstructor {
+    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Class<Apple> aClass = Apple.class;
+        //Constructor<?>[] declaredConstructors = aClass.getDeclaredConstructors();
+        //System.out.println(declaredConstructors);//[Ljava.lang.reflect.Constructor;@378bf509
+
+        /*
+        //Class类的getConstructor()方法,都不可获取到类的私有构造器
+        Constructor<Apple> constructor = aClass.getConstructor();
+        //Exception in thread "main" java.lang.NoSuchMethodException: com.itheima.day15.reflect.Apple.<init>()
+        */
+        Constructor<Apple> constructor = aClass.getDeclaredConstructor();
+        //设置访问权限
+        constructor.setAccessible(true);
+        //创建实例
+        Apple apple = constructor. newInstance();
+        System.out.println(apple);
+
+        Constructor<Apple> declaredConstructor = aClass.getDeclaredConstructor(String.class, double.class);
+        declaredConstructor.setAccessible(true);
+//        Apple apple2 = new Apple("红富士", 10.5);//和创建对象实例是一样的
+        Apple apple1 = declaredConstructor.newInstance("红富士", 10.5);
+        System.out.println(apple1);
+
+    }
+}
+/*
+Apple{name='null', price=0.0}
+Apple{name='红富士', price=10.5}
+*/
+```
+
+获取成员变量/成员方法 1.设置访问权限 2.调用方法或获取变量,给变量赋值
+
+```java
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+public class TestMethod {
+    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+        Apple apple = new Apple("苹果", 20);
+        apple.showName();
+
+        Class<? extends Apple> aClass = apple.getClass();
+        //获取方法
+        Method showName = aClass.getDeclaredMethod("showName");
+        System.out.println(showName);
+        //唤醒(调用)方法
+        showName.invoke(apple);
+    }
+}
+```
+
+## 反射与注解结合使用
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/*
+ * @Retention 该注解表明AutoRun注解在运行时是可见的，可以被程序反射机制读取和使用。
+ * @Target 该注解表明AutoRun注解应应用于方法级别。
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface AutoRun {
+
+}
+
+
+class Person {
+    @AutoRun
+    public void buyBook(){
+        System.out.println("买书");
+    }
+    //买苹果
+
+    public void buyApple(){
+        System.out.println("买苹果");
+    }
+    //买手机
+    public void buyPhone(){
+        System.out.println("买手机");
+    }
+    //买烟
+    public void buyCigarette(){
+        System.out.println("买烟");
+    }
+    @AutoRun
+    //买水
+    public void buyH2O(){
+        System.out.println("买水");
+    }
+}
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Objects;
+
+class Test {
+    public static void main(String[] args) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+		//步骤
+        //新建一个AutoRun的注解
+        // 使用反射动态获取方法
+        //获取方法上的注解
+        //判断AutoRun注解是否存在
+        // 如果存在 invoke调用
+
+        Person person = new Person();
+        Class personClass = person.getClass();
+
+        /*//使用反射创建Person类的实例。
+        Class<Person> personClass = Person.class;
+        Constructor<Person> declaredConstructor = personClass.getDeclaredConstructor();
+        declaredConstructor.setAccessible(true);
+        Person person = declaredConstructor.newInstance();*/
+
+        Method[] declaredMethods = personClass.getDeclaredMethods();
+        for (Method method : declaredMethods) {
+            AutoRun annotation = method.getAnnotation(AutoRun.class);
+            if(Objects.nonNull(annotation)){
+                method.invoke(person);
+
+            }
+        }
+    }
+}
+/*
+买书
+买水
+*/
+```
+
+# 单元测试
+
+## 为什么使用单元测试
+
+为了代替古老僵硬的main方法来进行优雅的代码的测试
+
+## JUnit
+
+### 使用流程
+
+1. 导入Junit  jar包
+2. 编写的测试方法必须是**公共的无参无返回值的非静态方法**
+3. 在方法上使用@Test注解来表示是一个测试方法
+4. 选中测试方法,右键运行即可
+
+
+
+```java
+public class Test {
+    @org.junit.Test
+    public void testStepOne() {
+        System.out.println("执行第一步");
+    }
+    @org.junit.Test
+    public void testStepTwo() {
+        System.out.println("执行第二步");
+    }
+    @org.junit.Test
+    public void testStepThree() {
+        System.out.println("执行第三步");
+    }
+}
+/*
+执行第一步
+执行第二步
+执行第三步
+*/
+```
+
+### 常用的三个注解
+
+​	@Test
+​	@Before 先于@Test执行
+​	@After @Test后执行
+
+```java
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import java.util.ArrayList;
+
+public class TestBeforeAndAfter {
+    private final ArrayList<Integer> list = new ArrayList<Integer>();
+    @After
+    public void after(){
+        System.out.println("执行结束");
+        list.clear();
+    }
+    @Before
+    public void before(){
+        System.out.println("执行开始");
+        list.add(1);
+        list.add(2);
+        list.add(3);
+
+    }
+    @Test
+    public void test(){
+
+        System.out.println(list);
+    }
+}
+/*
+执行开始
+[1, 2, 3]
+执行结束
+*/
+```
 
 # 设计模式
 
@@ -2619,6 +3422,214 @@ try (FileOutputStream out = new FileOutputStream("resource/c.txt", true)){
 
 每个模式
 
-策略模式
+## 策略模式
 
-装饰者模式
+更具
+
+## 装饰者模式
+
+可插拔
+
+与继承异常，是为类增强一个类的功能，但是继承是高耦合的。此模式实在不使用继承的前提下，使用组合来增强一个类的功能
+
+被装饰（被增强的）类与增强的（装饰类）类具有相同的父类/父接口
+
+## 单例模式
+
+单例模式：从内存角度看，该类只有以份对象存在
+
+```java
+
+import java.util.HashSet;
+import java.util.Objects;
+
+/**
+ * 单例的管理员类
+ * 单例模式书写：
+ * 1.构造器私有化
+ * 2.组合当前类属性
+ * 3.提供一个静态方法创建对象并返回
+ *
+ * 如何创建线程安全的单例模式？
+ */
+public class Admin {
+    public static final String USERNAME = "admin";
+    public static final String PASSWORD = "123456";
+    private static Admin admin;
+    private Admin(){}
+    //线程不安全的单例模式
+    public static Admin createSingleton(){
+        if (Objects.isNull(admin)){
+            admin = new Admin();
+        }
+        return admin;
+    }
+}
+class TestAdmin{
+    public static void main(String[] args) {
+//        Admin singleton = Admin.createSingleton();
+//        Admin singleton1 = Admin.createSingleton();
+//        System.out.println(singleton == singleton1);//true
+        HashSet<Admin> admins = new HashSet<>();
+        for (int i = 0; i < 100; i++) {
+            new Thread(()->{
+                admins.add(Admin.createSingleton());
+            }).start();
+
+        }
+        System.out.println(admins);
+    }
+}
+```
+
+## 建造者模式
+
+
+
+```java
+
+public class Test {
+    public static void main(String[] args) {
+
+        /*
+        建造者模式：
+        用来创建对象的设计模式
+
+        代替复杂的set方法以及有参构造器给属性赋值的
+
+        1.类中创建一个静态内部类 Builder
+        2.Builder类的属性全部都是被建造者类的属性
+        3.给每一个属性提供赋值方法
+        该方法具备一下特点：方法名与属性名相同
+                           返回值都是Builder对象
+        4. 提供最后的构建对象的方法build，该方法返回值是被建造者类对象
+        5.给建造者类型提供私有化构造器，参数是Builder
+         */
+        Book.Builder builder = new Book.Builder();
+        Book build = builder.author("张三")
+                .bookName("java编程思想")
+                .publisher("清华出版社")
+                .price(100)
+                .count(100)
+                .chapters(100)
+                .type("计算机")
+                .publishTime(LocalDate.now()).build();
+        System.out.println(build);
+    }
+}
+
+package com.itheima.day15.pattern;
+
+import java.time.LocalDate;
+
+public class Book {
+    private String bookName;
+    private String author;
+    private String publisher;
+    private double price;
+    /**
+     * 字数
+     */
+    private int count;
+    /**
+     * 章节
+     */
+    private int chapters;
+    private String type;
+    /**
+     * 出版日期
+     */
+    private LocalDate publishTime;
+
+    static class Builder {
+        private String bookName;
+        private String author;
+        private String publisher;
+        private double price;
+        /**
+         * 字数
+         */
+        private int count;
+        /**
+         * 章节
+         */
+        private int chapters;
+        private String type;
+        /**
+         * 出版日期
+         */
+        private LocalDate publishTime;
+
+        public Builder bookName(String bookName) {
+            this.bookName = bookName;
+            return this;
+        }
+
+        public Builder author(String author) {
+            this.author = author;
+            return this;
+        }
+
+        public Builder publisher(String publisher) {
+            this.publisher = publisher;
+            return this;
+        }
+
+        public Builder price(double price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder count(int count) {
+            this.count = count;
+            return this;
+        }
+
+        public Builder chapters(int chapters) {
+            this.chapters = chapters;
+            return this;
+        }
+
+        public Builder type(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder publishTime(LocalDate publishTime) {
+            this.publishTime = publishTime;
+            return this;
+        }
+
+        public Book build() {
+            return new Book(this);
+        }
+    }
+
+    private Book(Builder builder) {
+        this.bookName = builder.bookName;
+        this.author = builder.author;
+        this.publisher = builder.publisher;
+        this.price = builder.price;
+        this.count = builder.count;
+        this.chapters = builder.chapters;
+        this.type = builder.type;
+        this.publishTime = builder.publishTime;
+    }
+
+    public Book(String bookName, String author, String publisher, double price, int count, int chapters, String type, LocalDate publishTime) {
+        this.bookName = bookName;
+        this.author = author;
+        this.publisher = publisher;
+        this.price = price;
+        this.count = count;
+        this.chapters = chapters;
+        this.type = type;
+        this.publishTime = publishTime;
+    }
+
+    public Book() {
+    }
+}
+
+```
+
