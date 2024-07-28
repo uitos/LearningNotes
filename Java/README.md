@@ -202,13 +202,27 @@ public static void main(String[] args){
 //循环次数不确定 ：优先使用while循环 
 ```
 
-# Random随机数
+# 随机数
+
+- Random类
+- Math.random()
+- 时间戳
+
+## Random类
 
 ```java
 Random r = new Random();
 //jdk17新增语法 可以指定生成随机数的范围->由于计算机语言的差1性 ->[,)
 int i = r.nextInt(1,7);
 ```
+
+## Math.random()
+
+
+
+## 时间戳
+
+
 
 # 数组
 
@@ -1094,7 +1108,9 @@ if(animal instanceof Dog){
 
 包名+类名
 
-# final
+# 关键字
+
+## final
 
 final关键字是最终的意思，可以修饰类、修饰方法、修饰变量。
 
@@ -1107,9 +1123,9 @@ final关键字是最终的意思，可以修饰类、修饰方法、修饰变量
 引用数据类型:地址值不能修改，内部的属性值可以修改
 ```
 
+# 修饰符
 
-
-# 权限修饰符的分类
+## 权限修饰符的分类
 
 有四种作用范围由小到大(private<空着不写<protected<public)
 
@@ -1306,19 +1322,7 @@ Insert @Override（默认选中）**插入 @Override**
 
 
 
-## 适配器设计模式
 
-当一个接口中抽象方法过多，但是我们只要使用其中一部分的时候，就可以适配器设计模式
-
-### 书写步骤
-
-编写中间类XXXAdapter ，实现对应接口
-
-对接口中的抽象方法进行空实现
-
-让真正的实现类继承中间类，并重写需要的方法
-
-为了避免其他类创建适配器类的对象，中间的适配器类用abstract进行修饰
 
 # 内部类
 
@@ -2484,16 +2488,30 @@ range
 ## 并行流
 
 ```java
-//数组并行流.parallel()
-//stream可以开启并行流进行多线程计算
-long[] array = LongStream.range(1, 500000000).toArray();
-long start = System.currentTimeMillis();
-System.out.println(Arrays.stream(array).parallel().sum());
-long end = System.currentTimeMillis();
-System.out.println(end - start);
-//集合并行流
-List<Long> list = Arrays.stream(array).boxed().toList();
-System.out.println(list.parallelStream().reduce(Long::sum));
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.LongStream;
+
+public class Test {
+    public static void main(String[] args) {
+        //数组并行流.parallel()
+        //stream可以开启并行流进行多线程计算
+        long[] array = LongStream.range(1, 50000).toArray();
+        long start = System.currentTimeMillis();
+        System.out.println(Arrays.stream(array).parallel().sum());
+        long end = System.currentTimeMillis();
+        System.out.println("数组并行流执行时间："+ (end - start)+ "ms");
+        //集合并行流
+        List<Long> list = Arrays.stream(array).boxed().toList();
+        System.out.println(list.parallelStream().reduce(Long::sum));
+    }
+}
+/*
+1249975000
+数组并行流执行时间：6ms
+Optional[1249975000]
+*/
 ```
 
 # File
@@ -2853,7 +2871,7 @@ username=admin
 */
 ```
 
-# 线程
+# 线程 Thread
 
 ## 概念
 
@@ -2903,35 +2921,447 @@ username=admin
 -    实现Runnable接口的方式进行实现
 -    利用Callable和Future接口方式实现
 
+继承Thread类的方式进行实现
+
+```java
+class Mythread extends Thread{
+    private int num;
+    public Mythread(int num){
+        this.num = num;
+    }
+    @Override
+    public void run() {
+        System.out.println("线程执行"+num);
+
+    }
+}
+
+public class TestThread {
+    public static void main(String[] args) {
+        for (int i = 0; i < 1000; i++) {
+            Mythread mythread = new Mythread(i);
+            // 启动线程
+            //这里采用start方法而不是直接调用run方法，因为start方法会开启一个新的线程来执行run方法中的代码
+//            mythread.run();
+            //启动线程之后，run方法由操作系统执行
+            mythread.start();
+        }
+    }
+}
+/*
+线程执行10
+线程执行7
+线程执行0
+线程执行33
+线程执行30
+线程执行23
+线程执行21
+线程执行24
+...
+...执行1000次
+*/
+
+```
+
+实现Runnable接口的方式进行实现
+
+```java
+
+import java.util.Arrays;
+
+class MyRunnable implements Runnable{
+    @Override
+    public void run() {
+        int[] arr = {1,2,3,4,5,6};
+        int sum  = Arrays.stream(arr).sum();
+        System.out.println("sum is ="+sum);
+    }
+}
+
+public class TestRunnable {
+    public static void main(String[] args) {
+        // 创建一个MyRunnable实例，并用它来创建一个线程
+        MyRunnable myRunnable = new MyRunnable();
+        Thread thread = new Thread(myRunnable);
+        thread.start();
+        // 使用Lambda表达式创建一个Runnable实例，并直接在其中定义线程的执行逻辑
+        Runnable runnable = () -> {
+            int[] arr = {1,2,3,4,5,6,4,5,6};
+            int max  = Arrays.stream(arr).max().getAsInt();
+            System.out.println("max is ="+max);
+        };
+        Thread thread1 = new Thread(runnable);
+        thread1.start();
+    }
+}
+/*
+sum is =21
+max is =6
+*/
+```
+
+利用Callable和Future接口方式实现
+
+```java
+
+import java.util.Arrays;
+import java.util.concurrent.Callable;
+
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+
+class MyCalllable implements Callable<Integer> {
+
+    @Override
+    public Integer call() throws Exception {
+        int[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        int sum = Arrays.stream(arr).sum();
+        return sum;
+
+    }
+}
+
+public class TestCallable {
+    /**
+     * 创建一个Callable实例，将其包装成FutureTask，然后在新的线程中执行这个FutureTask。
+     * 最后，从FutureTask中获取并打印计算的结果。
+     * @param args
+     */
+    public static void main(String[] args) {
+        // 创建一个MyCalllable实例，它实现了Callable接口，用于执行具体的计算任务。
+        MyCalllable myCalllable = new MyCalllable();
+        //创建一部任务对象
+        //搭桥创建线程
+        FutureTask<Integer> futureTask = new FutureTask<>(myCalllable);
+        // 创建一个线程，用于执行FutureTask。
+        Thread thread = new Thread(futureTask);
+        //启动线程
+        thread.start();
+        try {
+            //调用异步任务的get方法来获取结果
+            System.out.println(futureTask.get());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
+/*
+55
+*/
+```
+
+
+
 ## Thread类中的方法
+
+常见静态方法
+
+​	sleep——线程休眠
+​	Thread.currentThread——返回当前线程对象
+
+获取线程名称
+
+​	静态方法——Thread.currentThread.getName()
+​	成员方法——getName
+
+设置线程名称
+
+​	静态方法——Thread.currentThread.setName()
+​	成员方法——setName
+
+
 
 ## 线程优先级
 
 建议优先级，让操作系统尽量优先处理线程
 
 线程优先级
-	setPriority
-	参数为1-10
+
++ setPriority
++ 参数为1-10
+
+```java
+
+public class TestPriority {
+    public static void main(String[] args) {
+        int[] a = {1};
+        for (int i = 0; i < 10; i++) {
+            Thread thread = new Thread(() -> {
+                System.out.println(a[0]++);
+            });
+            thread.setPriority(a[0]);
+            thread.start();
+        }
+    }
+}
+/*
+1
+3
+5
+6
+7
+8
+9
+10
+2
+4
+*/
+```
+
+## 守护线程
+
+守护线程
+
+是一种特殊的线程，当进程中不存在用户线程了(用户线程run/call方法执行完毕了)，则守护线程自动销毁
+
+典型的守护线程
+
+是垃圾回收线程，当进程中没有非守护线程了，则垃圾回收线程也就没有存在的必要了，自动销毁。
+
++ setDaemon方法
+
+```java
+
+@SuppressWarnings("all")
+public class TestDemon {
+    public static void main(String[] args) {
+        new Thread(()->{
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        Thread thread = new Thread(() -> {
+            while (true) {
+                System.out.println(1);
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+    }
+}
+/*
+1
+1
+1
+1
+1
+1
+1
+1
+...持续2000毫秒
+*/
+```
+
+## 线程状态介绍
+
++ 操作系统线程六种状态
+
++ Java中的线程六种状态
+  + 新建**NEW**——创建了线程对象new Thread
+  + 运行中**RUNNABLE**——调用了start方法
+  + 阻塞**BLOCKED**——没有获取到锁对象
+  + 等待**WAITING**——调用了wait方法
+  + 计时等待**TIME_WAITING**——调用的sleep
+  + 结束**TERMINATED**——线程运行结束,run方法运行完毕
 
 
 
-## 现实锁
+getState()
+
+```java
+Thread thread = new Thread(() -> {
+System.out.println(123);
+});
+thread.start();
+System.out.println(thread.getState());
+/*
+RUNNABLE
+123
+*/
+```
+
+
+
+## 线程操作共享数据时的安全问题
+
+### 案例演示
+
+银行的一个账户。储户可以向账户中存钱取钱
+
+有两个储户分别向同一个账户存5000元，每次存1000，存5次。每次存完打印账户余额。
+
+```java
+
+import java.math.BigDecimal;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Account {
+    private BigDecimal balance = BigDecimal.ZERO;
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+    private final Object LOCK = new Object();
+    public void deposit(double money){
+            BigDecimal bigDecimal = BigDecimal.valueOf(money);
+            balance = balance.add(bigDecimal);
+    }
+}
+
+@SuppressWarnings("all")
+public class Test {
+    public static void main(String[] args) {
+        Account account = new Account();
+        Thread thread = new Thread(() -> {
+            for (int i = 0; i < 5; i++) {
+                account.deposit(1000.0);
+            }
+        });
+        thread.start();
+        Thread thread1 = new Thread(() -> {
+            for (int i = 0; i < 5; i++) {
+
+                account.deposit(1000.0);
+            }
+        });
+        thread1.start();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(account.getBalance());
+
+    }
+}
+/*
+5000.0
+*/
+
+```
+
+原因：存在非原子操作
+
+### 什么叫原子操作
+
+所有操作要么一起执行,要么一起失败
+
+### 解决方法
+
++ synchronized关键字同步方法
++ synchronized同步代码块
+
+加synchronized锁实现线程间的同步,保证原子操作
+
+```java
+
+import java.math.BigDecimal;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Account {
+    /*
+    synchronized 同步锁
+    为什么要给一个方法锁？ 因为该方法在run/call中被多线程给调用了，操作是同一个数据（变量）》》 对变量进行变化是一个非原子性操作
+    加到什么地方？ 加到被run/call调用的方法上
+    加锁的步骤 ： 1获取（抢）锁 2。原子性的执行方法，直到执行完毕 3.释放所
+    特点：
+    1. 非公平锁 -》 抢到锁执行释放锁之后还可以继续参与枪锁
+    2. 互斥锁 -》 线程抢到锁之后，加锁的方法只能由该线程执行直到释放锁
+    3. 独占锁 -》 一把锁只能由一个线程独自占用，直到释放
+    4. 隐式锁 -》 加锁的步骤自己无法控制，看不见锁
+     */
+
+    private BigDecimal balance = BigDecimal.ZERO;
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+    private final Object LOCK = new Object();
+//    public synchronized void deposit(double money){
+    public void deposit(double money){
+        //同步代码块，自己写一个锁，该锁一般是一个Object对象
+        synchronized (LOCK){
+            BigDecimal bigDecimal = BigDecimal.valueOf(money);
+            balance = balance.add(bigDecimal);
+        }
+    }
+}
+
+```
+
+### synchronized的缺陷
+
++ 效率低
+  + 锁的释放情况少(同步代码块中执行的非常耗时的操作)
+  + 试图获取锁时不能设定超时
+
++ 不够灵活
+  + 不能自己控制加锁和解锁的时机
+  + 每一个锁仅有单一的条件（某个对象）
+  + 无法知道是否成功获取到锁 
+
+### 什么情况下会出现线程安全问题呢
+
+多条线程操作共享数据（可以拆分为三个条件）:
+
+1. 多线程环境
+
+2. 有共享数据
+
+3. 多条线程操作了共享数据
+
+## 显示锁
 
 是JUC包下LOCK类库当中的类，需要创建对象
 
 JUC包（并发包）java.util.concurrent包
 
+Lock是接口不能直接实例化，这里采用它的实现类ReentrantLock来实例化
+
+```java
+
+import java.math.BigDecimal;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Account {
+
+    private BigDecimal balance = BigDecimal.ZERO;
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+    ReentrantLock lock = new ReentrantLock();
+    public void deposit(double money){
+        //显式锁
+        lock.lock();
+        try{
+            BigDecimal bigDecimal = BigDecimal.valueOf(money);
+            balance = balance.add(bigDecimal);
+        }finally {
+            lock.unlock();
+        }
+    }
+}
+```
+
 ## 死锁
 
 死锁就是指两个或两个以上的线程在执行过程中，由于竞争资源产生的互相等待资源释放的现象
 
-​	具体原因
-​		互斥条件：一个资源只能被一个线程占有，当这个资源被占有后其他线程就只能等待
-​		不可剥夺条件：当一个线程不主动释放资源时，此资源一直被拥有线程占有
-​		请求并持有条件：线程已经拥有了一个资源后，又尝试请求新的资源
-​		环路等待条件：产生死锁一定是发生了线程资源环形链
-​	解决死锁
-​		改变资源的环路等待，顺序获取锁资源
+### 具体原因
+
++ 互斥条件：一个资源只能被一个线程占有，当这个资源被占有后其他线程就只能等待
++ 不可剥夺条件：当一个线程不主动释放资源时，此资源一直被拥有线程占有
++ 请求并持有条件：线程已经拥有了一个资源后，又尝试请求新的资源
++ 环路等待条件：产生死锁一定是发生了线程资源环形链
+
+### 解决死锁
+
+改变资源的环路等待，顺序获取锁资源
 
 ## 线程安全集合
 
@@ -2960,33 +3390,261 @@ HashMap/TreeMap/LinkedHashMap -> ConcurrentHashMap -> 加同步锁
 
 ![image-20240720171305240](images/image-20240720171305240.png)
 
-# 线程池
+# 线程池 ThreadPool
 
-java线程六种状态
+## 线程池的好处
 
-操作系统线程六种状态
++ 专注于任务的提交,而不是线程的创建与启动
++ 降低资源消耗——重复利用已创建的线程降低线程创建和销毁造成的消耗。
++ 提高响应速度——有任务到达时，任务可以不需要等到线程创建就能立 即执行
++ 线程池可以有效地管理线程——根据不同业务场景通过控制线程池对象的参数来管理线程的数量以及执行流程。
 
-Java中的线程六种状态
-	新建NEW	创建了线程对象new Thread
-	运行中RUNNABLE	调用了start方法
-	阻塞BLOCKED	没有获取到锁对象
-	等待WAITING	调用了wait方法
-	计时等待TIME_WAITING	调用的sleep
-	结束TERMINATED	线程运行结束,run方法运行完毕
+## 默认线程池 Executors
+
+1. 创建线程池
+
+   + newSingleThreadExecutor
+
+     创建单线程池子,即线程池中只有一个线程
+
+   + newCachedThreadPool
+
+     创建无限制线程数量的线程池,即任务很多来不及处理时，会无休止创建线程,线程执行完任务后再归还给线程池
+
+   + newFixedThreadPool
+
+     线程池中线程的最大数量由指定参数控制
+
+   + newScheduledThreadPool
+
+     定时任务线程
+
+2. 提交任务
+
+   调用submit方法
+
+3. 关闭线程池c
+
+   调用shutDown方法  
+
+newSingleThreadExecutor——创建单线程池子,即线程池中只有一个线程
 
 ```java
-Thread thread = new Thread(() -> {
-System.out.println(123);
-});
-thread.start();
-System.out.println(thread.getState());
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * 创建单线程池：池中最多只有一个线程，创建线程池之后，池中有0个线程，来了任务之后才会创建线程，不销毁线程，复用线程
+ */
+public class SingleThreadDemo {
+    public static void main(String[] args) {
+        //返回线程池服务对象
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(() -> {
+            System.out.println("执行任务1");
+        });
+        executorService.execute(() -> {
+            System.out.println("执行任务2");
+        });
+        executorService.execute(() -> {
+            System.out.println("执行任务3");
+        });
+        //关闭线程池
+        executorService.shutdown();
+    }
+}
 /*
-RUNNABLE
-123
+执行任务1
+执行任务2
+执行任务3
 */
 ```
 
-目的：复用线程
+
+
+newCachedThreadPool——创建无限制线程数量的线程池,即任务很多来不及处理时，会无休止创建线程,线程执行完任务后再归还给线程池
+
+```java
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * 创建缓存线程池：最多能创建Integer.MAX_VALUE个线程（不允许使用）
+ */
+public class CachedThreadDemo {
+    public static void main(String[] args) {
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        executorService.execute(()->{
+            System.out.println(123);
+        });
+        //优雅终止
+        executorService.shutdown();
+        //立即终止
+        executorService.shutdownNow();
+    }
+}
+
+```
+
+
+
+newFixedThreadPool——线程池中线程的最大数量由指定参数控制
+
+```java
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * 创建固定数量的线程池：最大值Integer.MAX_VALUE
+ */
+public class FixedThreadDemo {
+    public static void main(String[] args) {
+        //线程池中线程的最大数量
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        executorService.execute(()->System.out.println("执行任务1"));
+        executorService.execute(()->System.out.println("执行任务2"));
+        executorService.execute(()->System.out.println("执行任务3"));
+        executorService.execute(()->System.out.println("执行任务4"));
+        executorService.execute(()->System.out.println("执行任务5"));
+        executorService.shutdown();
+    }
+}
+/*
+执行任务1
+执行任务2
+执行任务3
+执行任务4
+执行任务5
+*/
+```
+
+
+
+newScheduledThreadPool——定时任务线程
+
+```java
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * 定时任务线程池
+ * 定时任务：以固定频率周期性的执行任务
+ */
+public class ScheduledThreadPool {
+    public static void main(String[] args) {
+        //定时任务线程池服务对象
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+        scheduledExecutorService.scheduleAtFixedRate(()->{
+            System.out.println("学it");
+        },0,3, TimeUnit.SECONDS);
+    }
+}
+```
+
+参数详解
+
+```java
+public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
+                                                  long initialDelay,
+                                                  long period,
+                                                  TimeUnit unit);
+参数：
+
+command – 		要执行的任务 @NotNull
+initialDelay – 	延迟首次执行的时间 
+period – 		连续执行之间的时间间隔 
+unit – 			initialDelay 和 period 参数的时间单位 @NotNull
+```
+
+## 多线程下保证基本数据类型原子性
+
+```java
+/*
+基本数据类型：四类八种
+包装类 ：八种（浮点数无法精确计算，超过long，double的无法存储）
+大类：以Big开头的类 BigDecimal,BigInteger
+以上都还有统一缺点： 多线程下无法保证原子性
+源自类：以Atomic开头的类，保证基本数据类型原子操作的原子类
+ */
+int a = 1;
+a++;
+AtomicInteger atomicInteger = new AtomicInteger(1);
+System.out.println(atomicInteger.incrementAndGet());//a++
+atomicInteger.decrementAndGet();//a--
+```
+
+## 手动指定参数线程池 ThreadPoolExecutor
+
+七大参数
+
++ 核心线程数量——任务提交到线程之后，创建之后不会销毁
++ 最大线程数——用来计算非核心，非核心会被销毁
++ 空闲线程最大存活时间——指定非核心不在处理任务时的销毁时间
++ 任务队列——任务堆积
++ 空闲存活时间单位——指定非核心销毁时间单位
++ 线程工厂——可以指定线程创建方式（指定线程名字）
++ 任务的拒绝策略——任务队列满了，出发拒绝策略（有四种）
+
+```java
+import java.util.concurrent.*;
+
+/**
+ * 自定义的固定大小线程池类，用于演示线程池的使用和定制。
+ */
+public class MannulThreadPool {
+    /**
+     * 程序入口主方法。
+     * @param args 命令行参数
+     * @throws InterruptedException 如果线程被中断
+     */
+    public static void main(String[] args) throws InterruptedException {
+        /*
+         * 创建一个固定大小的线程池。
+         * 核心线程数为3，最大线程数为10，线程保持活跃时间为5分钟，
+         * 使用ArrayBlockingQueue作为任务队列，队列大小为100，超出队列容量的任务将被拒绝。
+         */
+        ArrayBlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(100);
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(3, 10, 5
+                , TimeUnit.MINUTES, queue,new ThreadPoolExecutor.DiscardPolicy());
+
+        /* 提交200个任务给线程池执行 */
+        for (int i = 0; i < 200; i++) {
+            threadPoolExecutor.execute(()-> {
+                System.out.println(Thread.currentThread().getName());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+        }
+
+        /* 创建一个单线程的定时任务执行器 */
+        ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
+
+        /* 定期打印队列中堆积的任务数量 */
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            System.out.println("队列中堆积的任务" + queue.size());
+        }, 0, 3, TimeUnit.SECONDS);
+    }
+}
+```
+
+## 拒绝策略
+
+拒绝的触发时机——提交的任务>池子中最大线程数+队列最大数量
+四种拒绝策略
+
++ AbortPolicy——丢弃任务,并抛出异常
++ DiscardPolicy——丢弃任务,不抛异常(不推荐)
++ DiscardOldestPolicy——抛弃队列中等待最久的任务,加入新任务到队列
++ CallerRunsPolicy——调用任务run/call方法,绕过线程池执行
 
 
 
@@ -3742,3 +4400,16 @@ public class Book {
 
 ```
 
+## 适配器设计模式
+
+当一个接口中抽象方法过多，但是我们只要使用其中一部分的时候，就可以适配器设计模式
+
+书写步骤
+
+编写中间类XXXAdapter ，实现对应接口
+
+对接口中的抽象方法进行空实现
+
+让真正的实现类继承中间类，并重写需要的方法
+
+为了避免其他类创建适配器类的对象，中间的适配器类用abstract进行修饰
