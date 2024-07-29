@@ -1,20 +1,84 @@
-# 目录
-
-[TOC]
 
 
+# JDK新增语法
 
-# JDK新增
+## JDK8
+
+
 
 ## JDK11
 
-新增String的strip()、isBlank()、isEmpty()
+> 新增String的strip()、isBlank()、isEmpty()
 
 ```java
 String ss = " ";
 System.out.println(ss.isBlank());//true
 System.out.println(ss.isEmpty());//false
 ```
+
+## JDK13
+
+> 文本块——预览特性引入
+
+```java
+String textBlock = """
+        题目：《咏鹅》
+        
+        鹅，鹅，鹅，
+        曲项向天歌。
+        白毛浮绿水，
+        红掌拨清波。
+        
+        —— 唐·骆宾王
+        """;
+System.out.println(textBlock);
+/*
+题目：《咏鹅》
+
+    鹅，鹅，鹅，
+    曲项向天歌。
+    白毛浮绿水，
+    红掌拨清波。
+
+—— 唐·骆宾王
+*/
+```
+
+
+
+## JDK14
+
+switch新语法——JDK12预览特性引入，JDK14正式引入
+
+> 箭头语法 -> 替换break
+>
+> case多值匹配语法，case后面可以跟多个值，多个值使用逗号隔开
+
+```java
+
+public class Test {
+    public static void main(String[] args) {
+        int season = 1;
+		doSomething(season);
+    }
+    public static void doSomething(int season){
+        switch (season){
+            case 1,2,3 -> System.out.println("春游");
+            case 4,5,6 -> System.out.println("夏游");
+            case 7,8,9 -> System.out.println("秋游");
+            case 10,11,12 -> System.out.println("冬游");
+            default -> System.out.println("没有此季节");
+        }
+    }
+}
+/*
+春游
+*/
+```
+
+
+
+## JDK17
 
 # 面试题
 
@@ -95,7 +159,7 @@ java线程六种状态
 
 隐式转换
 
-![](./images/算数运算符，隐式转换.png)
+![](./images/20240403100318.png)
 
 赋值运算符
 关系运算符/比较运算符
@@ -2418,6 +2482,8 @@ System.out.println(map);
 
 JDK1.5引用
 
+## 为什么要引入枚举类型
+
 为了解决常量的缺点
 
 常量不做任何检查,想传什么值都可以,甚至出现越界情况
@@ -2426,13 +2492,88 @@ JDK1.5引用
 
 列举的值，之列举范围之内
 
+## 格式
+
+- 格式
+
+  ```java
+  public enum s {   
+  	枚举项1,枚举项2,枚举项3;
+  }
+  注意: 定义枚举类要用关键字enum
+  ```
+
+- 示例代码
+
+  ```java
+  // 定义一个枚举类，用来表示春，夏，秋，冬这四个固定值
+  public enum Season {
+      SPRING,SUMMER,AUTUMN,WINTER;
+  }
+  ```
+
+
+
 ## 特点
+
++ 所有的枚举都是Enum的子类
+
++ 我们可以通过“枚举类名.枚举项名”去访问指定的枚举项
+
++ 每个枚举项其实就是该枚举的一个对象
+
++ 枚举也是一个类，也可以去定义成员变量
+
++ 枚举类的第一行上必须是枚举项，最后一个枚举项后的分号是可以省略的，但是如果枚举类有其他的东西，这个分号就不能省略，建议不要省略
+
++ 枚举类可以有构造器，但必须是private的，它默认的也是private的。
+
+  枚举项的用法比较特殊：枚举("");
+
++ 枚举类也可以由抽象方法，但是枚举项必须重写该方法
 
 所有的枚举都是Enum的子类
 
-![image-20240710095446848](images\image-20240710095446848.png)
+![image-20240729114255722](images/image-20240729114255722.png)
 
 
+
+```java
+
+enum SeasonEnum {
+    /**
+     * 春天
+     */
+    SPRING,
+    /**
+     * 夏天
+     */
+    SUMMER,
+    /**
+     * 秋天
+     */
+    AUTUMN,
+    /**
+     * 冬天
+     */
+    WINTER;
+}
+public class TestSeasonEnum {
+    public static void main(String[] args) {
+        //限定了，只能传枚举项
+        doSomethingByEnum(SeasonEnum.SPRING);
+    }
+    public static void doSomethingByEnum(SeasonEnum season) {
+        //switch 和枚举类特别契合 因为jdk做了专门的优化
+        switch (season) {
+            case SPRING->System.out.println("春天");
+            case SUMMER->System.out.println("夏天");
+            case AUTUMN->System.out.println("秋天");
+            case WINTER->System.out.println("冬天");
+        }
+    }
+}
+```
 
 # Stream流
 
@@ -3736,15 +3877,19 @@ Socket
 
 # 日志
 
-为什么引入日志技术?
-	为了解决输出语句的弊端
+## 为什么引入日志技术?
+
+为了解决输出语句的弊端
 		想取消输出语句,只能修改代码
 		打印的内容只能输出在控制台,不能输出到其他位置
 
-日志技术与普通输出语句的区别
-![image-20240720144617403](images/image-20240720144617403.png)
+## 日志技术与普通输出语句的区别
 
-
+|          | 输出语句                   | 日志技术                                 |
+| -------- | -------------------------- | ---------------------------------------- |
+| 取消日志 | 需要修改代码，灵活性比较差 | 不需要修改代码，灵活性比较好             |
+| 输出位置 | 只能是控制台               | 可以将日志信息写入到文件或者数据库中     |
+| 多线程   | 和业务代码处于一个线程中   | 多线程方式记录日志，不影响业务代码的性能 |
 
 
 
@@ -3754,7 +3899,7 @@ Socket
 
 将编译好的.class文件，加载到内存当中
 
-![01_类加载器](images/01_类加载器.png)
+![image-20240728110632523](images/image-20240725110632523.png)
 
 ## 类加载的过程
 
