@@ -11,7 +11,7 @@
 
 ## JDBC访问模型
 
-<img src="images/image-20240808195218534.png" alt="image-20240808195218534" style="zoom:50%;" />
+<img src="images/image-20240808195218534.png" alt="image-20240808195218534" style="zoom: 80%;" />
 
 ## JDBC使用步骤
 
