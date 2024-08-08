@@ -3847,40 +3847,114 @@ Socket
 
 # 注解
 
-什么是注解
-	对程序进行标注和解释
+## 什么是注解
 
-注解和注释的区别
-	注释
-		给程序员看的
-	注解
-		给编译器看的,标示一些特殊功能
+Java注解是代码中的特殊标记,比如@Override、@Test等
 
-之前使用过的注解
+作用是：让其他程序根据注解信息决定怎么执行该程序。
 
-@Deprecated 标记类,方法,属性过时,不建议使用了
+注解不光可以用在方法上，还可以用在类上、变量上、构造器上等位置。
 
-@Override
+## 注解和注释的区别
 
-@SuppressWarnings() 压制警告
+**注释**——给程序员看的
 
-@Target
+**注解**——给编译器看的,标示一些特殊功能
+
+@Deprecated **/ ˈdeprəkeɪtɪd /**
+
+标记类、方法、属性过时，表示不建议使用了
+
+@Override 
+
+表示方法重写 区分本类定义的方法和重写父类的方法
+
+@SuppressWarnings() **/ səˈpres // ˈwɔːrnɪŋs /**
+
+压制警告，可以放在类、方法、字段等上面。
+
+```java
+@SuppressWarnings("all")
+```
+
+
 
 ## 自定义注解
 
+格式
 
+```java
+public @Interface  注解名称{
+
+	public 属性类型 属性名() default 默认值;
+
+}
+```
+
+
+
+```java
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 自定义用户注解
+ */
+@SuppressWarnings("all")
+@Target({ElementType.TYPE,ElementType.METHOD})
+// 指定注解的保留策略为CLASS，即注解仅保留在字节码文件中
+@Retention(RetentionPolicy.CLASS)
+@interface User {
+    String name() default "summmer";
+    int age() default  18;
+    String username();
+    String password();
+    String[] gender() default {"男","女","不确定"};
+
+    int[] score();
+    String value();
+
+}
+
+/**
+ * 自定义注解
+ * 使用@interface关键字来定义
+ * 属性后要加()
+ * 属性赋值使用default关键字跟上值来赋值
+ * 如果过没有赋值，在使用时要指定属性值
+ * 数组属性default赋值致谢一个值大括号可以省略，如果有多个不可以
+ *
+ * value时jdk内置的一个特殊属性名
+ */
+@User(username = "summer", password = "123456", score = {1,2,3}, value = "")
+@SuppressWarnings({})
+public class TestUser {
+    @User(username = "", password = "", score = {}, value = "")
+    public static void main(String[] args) {
+        
+    }
+}
+```
 
 ## 元注解
 
-@Retention
+元注解——写在注解上的注解
 
-**/ rɪˈtenʃ(ə)n /**
+四大元注解
+
+@Target **/ ˈtɑːrɡɪt /**
 
 
 
-@Target
+@Retention **/ rɪˈtenʃ(ə)n /**
 
-**/ ˈtɑːrɡɪt /**
+
+
+
+
+
 
 # 日志
 

@@ -26,212 +26,35 @@
 >
 > %MYSQL_HOME%\bin
 
-配置 MySQL 的配置文件
+
+
+配置 MySQL 的配置文件my.ini
 
 ```ini
-#客户端部分
-[client]
-
-# pipe=
-
-# socket=MYSQL
-#指定MySQL服务器监听的TCP/IP端口。
-port=3306
-
-#Mysql部分
 [mysql]
-#当发生错误时，禁用蜂鸣声提示。
-no-beep
-
-# default-character-set=
-
-# server_type=3
-
-#Mysqld部分
+default-character-set=utf8
 [mysqld]
-
-# The next three options are mutually exclusive to SERVER_PORT below.
-# skip-networking
-# enable-named-pipe
-# shared-memory
-
-# shared-memory-base-name=MYSQL
-
-# The Pipe the MySQL Server will use
-# socket=MYSQL
-
-#再次声明MySQL服务器的TCP/IP端口。
-port=3306
-
-#设定数据库根目录路径。
-# basedir="D:/Program Files/MySQL/MySQL Server 8.0/"
-
-# Path to the database root
+# 设置3306端口
+port = 3306
+# 设置mysql的安装目录
+basedir = D:/Program Files/MySQL/MySQL Server 8.0/
+# 设置mysql数据库的数据的存放目录
 datadir=D:/Program Files/MySQLData/MySQL Server 8.0\Data
-
-# The default character set that will be used when a new schema or table is
-# created and no character set is defined
-# character-set-server=
-
-#设定默认的存储引擎为InnoDB。
+# 允许最大连接数
+max_connections=20
+# 服务端使用的字符集默认为8比特编码的latin1字符集
+character-set-server=utf8
+# 创建新表时将使用的默认存储引擎
 default-storage-engine=INNODB
+# 创建模式
+sql_mode = NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 
-#设置SQL模式为严格模式，确保事务表遵循严格的标准，不使用替代存储引擎。
-sql-mode="STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION"
+```
 
-#日志输出方式为文件。
-log-output=FILE
+安装mysqld服务
 
-#关闭一般查询日志。
-general-log=0
-
-#指定一般查询日志文件名。
-general_log_file="LAPTOP-JFFS3BI2.log"
-
-#开启慢查询日志。
-slow-query-log=1
-
-#指定慢查询日志文件名。
-slow_query_log_file="LAPTOP-JFFS3BI2-slow.log"
-
-#设定慢查询时间阈值为10秒。
-long_query_time=10
-
-#指定错误日志文件名。
-log-error="LAPTOP-JFFS3BI2.err"
-
-# ***** Group Replication Related *****
-#指定二进制日志基名，用于备份和复制。
-log-bin="LAPTOP-JFFS3BI2-bin"
-
-# ***** Group Replication Related *****
-#设定服务器ID，对于复制拓扑结构中的服务器，必须指定唯一的服务器ID。
-server-id=1
-
-# ***** Group Replication Related *****
-# The host name or IP address of the replica to be reported to the source
-# during replica registration. This value appears in the output of SHOW REPLICAS
-# on the source server. Leave the value unset if you do not want the replica to
-# register itself with the source.
-# report_host=0.0
-
-#设定表名和数据库名一律小写。
-lower_case_table_names=1
-
-#设定安全文件导入导出权限。
-secure-file-priv="D:/Program Files/MySQLData/MySQL Server 8.0/Uploads"
-
-#设定最大并发会话数。
-max_connections=151
-
-#设定所有线程可打开的表数，增加此值可以提高打开大量表时的性能。
-table_open_cache=2000
-
-#设定内存临时表的最大尺寸，超过此值将转为基于磁盘的表。
-tmp_table_size=105M
-
-#设定线程缓存大小，用于重用断开连接的客户端线程，减少线程创建。
-thread_cache_size=10
-
-#*** MyISAM Specific options
-#设定MyISAM索引重建时允许使用的最大临时文件大小。
-myisam_max_sort_file_size=100G
-
-#设定用于排序MyISAM索引的缓冲区大小。
-myisam_sort_buffer_size=200M
-
-#设定MyISAM表索引缓存大小
-key_buffer_size=8M
-
-#设定读取MyISAM表全表扫描时的缓冲区大小。
-read_buffer_size=64K
-
-#设定随机读取MyISAM表时的缓冲区大小。
-read_rnd_buffer_size=256K
-
-#*** INNODB Specific options ***
-# innodb_data_home_dir=
-
-# Use this option if you have a MySQL server with InnoDB support enabled
-# but you do not plan to use it. This will save memory and disk space
-# and speed up some things.
-# skip-innodb
-
-#设定InnoDB在每次提交时刷新日志到磁盘，确保ACID特性。
-innodb_flush_log_at_trx_commit=1
-
-#设置InnoDB日志缓冲区的大小为1M，用于缓存日志数据，以减少磁盘I/O操作。
-innodb_log_buffer_size=1M
-
-#设置InnoDB缓冲池的大小为8M，用于缓存索引和数据页，减少磁盘I/O操作。
-innodb_buffer_pool_size=8M
-
-#设置InnoDB日志文件的大小为48M，日志文件用于记录事务的修改操作，以便在系统崩溃时进行恢复。
-innodb_log_file_size=48M
-
-#设置InnoDB内核允许的最大线程并发数为33，以避免过多的线程竞争导致性能下降。
-innodb_thread_concurrency=33
-
-#置InnoDB表空间文件自动扩展的增量为64M。
-innodb_autoextend_increment=64
-
-#将InnoDB缓冲池划分为8个区域，以减少缓存争用。
-innodb_buffer_pool_instances=8
-
-#设置InnoDB并发控制的票数为5000，用于控制进入InnoDB内核的线程数量。
-innodb_concurrency_tickets=5000
-
-#设置InnoDB中旧数据块在旧列表中保留的时间为1000ms。
-innodb_old_blocks_time=1000
-
-#设置InnoDB能够同时打开的文件数为300。
-innodb_open_files=300
-
-#禁止在元数据语句中更新InnoDB的统计信息。
-innodb_stats_on_metadata=0
-
-#将每个InnoDB表的数据和索引存储在单独的.ibd文件中，而不是系统表空间中。
-innodb_file_per_table=1
-
-#设置InnoDB的校验和算法为crc32
-innodb_checksum_algorithm=0
-
-#设置MySQL能够处理的连接请求队列的长度为80。
-back_log=80
-
-#禁止定期刷新缓冲池和日志文件到磁盘。
-flush_time=0
-
-#设置连接缓冲区的大小为256K。
-join_buffer_size=256K
-
-#设置最大允许的数据包大小为4M。
-max_allowed_packet=4M
-
-#设置最大允许的连接错误次数为100。
-max_connect_errors=100
-
-#设置MySQL能够打开的文件数限制为4161。
-open_files_limit=4161
-
-#设置排序缓冲区的大小为256K。
-sort_buffer_size=256K
-
-#设置表定义缓存的大小为1400。
-table_definition_cache=1400
-
-#设置行式二进制日志事件的最大大小为8K
-binlog_row_event_max_size=8K
-
-#设置中继日志同步到磁盘的间隔为10000次写入。
-sync_relay_log=10000
-
-#设置中继日志信息文件同步到磁盘的间隔为10000次事务。
-sync_relay_log_info=10000
-
-#设置MySQLX协议监听的端口号为33060。
-loose_mysqlx_port=33060
-
+```shell
+mysqld --install
 ```
 
 初始化data目录
@@ -329,4 +152,97 @@ MySQL 服务无法启动。
 ```shell
 mysqld --initialize-insecure
 ```
+
+# 基本概念
+
+
+
+# 基本操作
+
+## 可操作对象有哪些？
+
+数据库（database）
+
+表（table）
+
+行（row）
+
+列（column）
+
+## 操作库
+
+
+
+## 操作表
+
+## 数据增删改
+
+## 数据查询
+
+### 简单查询
+
+​		基本语法
+​			select ... from 表名
+​		别名
+​			select 列名 [as] 列别名  from 表名 [as] 表别名
+​		去重关键字
+​			select distinct 列名 from 表名
+
+### 条件查询
+
+​		select ... from 表名 where 条件
+​			关系运算符
+​			in关键字
+​				select ... from 表名 where 列名 in(值1,值2..);
+​			between关键字
+​				select ... from 表名 where 列名 between 较小的值 and  较大的的值
+​			is null关键字
+​				is null  为空
+​				is not null  不为空
+​			逻辑运算符
+​				and
+​				or
+​				not
+​					取反
+​						常与In ，between连用
+​							not in（）
+​							not between 
+​			like关键字
+​				_ 单个任意字符
+​				% 多个任意字符
+
+### 聚合函数
+
+​		会忽略掉值为null行
+​		count
+​			返回某列的行数
+​				如果是count（*）使用*通配符则代表统计所有符合条件的行数，包括null
+​				单独统计某列 count（列名），会忽略掉值为null的列
+​		max
+​		min
+​		sum
+​		avg
+​		还有大量函数.....
+​	分组
+​		select 分组列,聚合函数() from 表名 group by 分组 having 分组后条件
+​			where在分组前条件过滤，不能使用聚合函数
+​			having在分组后条件过滤，可以使用聚合函数
+
+### 排序
+
+​		select ... from 表名 order by 排序列 [asc | desc]
+​			asc 升序 默认值
+​			desc 降序
+
+### 限制结果
+
+​		select ... from 表名 where  ....  limit 个数（取结果前几个）
+
+### 分页
+
+​		select ... from 表名 limit 开始行数,检索行数
+
+
+
+
 
