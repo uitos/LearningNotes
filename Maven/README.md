@@ -1,4 +1,8 @@
-# Maven是什么？
+# Maven介绍
+
+
+
+## Maven是什么？
 
 Apache软件基金会下的一款用于构建java项目的开源软件
 常见构建java项目的软件
@@ -7,7 +11,7 @@ Apache软件基金会下的一款用于构建java项目的开源软件
 
 
 
-# 生命周期 Lifecycle
+## 生命周期 Lifecycle
 
 1. clean
    目的：清除之前构建产生的输出文件，如编
@@ -41,6 +45,54 @@ Apache软件基金会下的一款用于构建java项目的开源软件
 10. deploy
    目的：将打包后的项目部署到远程仓库，供其他开发人员或项目使用。
    命令：`mvn deploy`
+
+# Maven 的下载安装
+
+官网下载
+
+http://maven.apache.org/download.cgi
+
+最新版本
+
+![image-20240808121507592](images/image-20240808121507592.png)
+
+历史版本
+
+![image-20240808121642691](images/image-20240808121642691.png)
+
+
+
+![image-20240808121722443](images/image-20240808121722443.png)
+
+# IDEA使用Maven项目
+
+![image-20240808120025938](images/image-20240808120025938.png)
+
+![image-20240808120201092](images/image-20240808120201092.png)
+
+![image-20240808120251945](images/image-20240808120251945.png)
+
+![image-20240808120337788](images/image-20240808120337788.png)
+
+![image-20240808120623811](images/image-20240808120623811.png)
+
+![image-20240808120800709](images/image-20240808120800709.png)
+
+Apply->OK
+
+
+
+# Maven仓库
+
+新
+
+https://central.sonatype.com/
+
+旧
+
+https://mvnrepository.com/
+
+
 
 
 

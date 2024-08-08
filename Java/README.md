@@ -1627,15 +1627,20 @@ lambda表达式构造方法引用使用前提
 */
 ```
 
-闭包
+## 闭包问题
 
 ```java
-List<Integer> integers = List.of(1, 2, 3, 4, 5, 6);
-final int[] a = {10};
 //闭包:在 lambda表达式中使用外界变量时，会给该变量自动加上final
-//使用一个元素的数组解决lambda闭包问题
+//解决闭包 1.变成引用数据类型——使用一个元素的数组解决lambda闭包问题
+//		2.变成原子类
+List<Integer> integers = List.of(1, 2, 3, 4, 5, 6);
+final int[] a = {0};
+//AtomicInteger a = new AtomicInteger(0);
+AtomicInteger a = new AtomicInteger(0);
 integers.forEach(o -> {
     System.out.println(a[0]++);
+    // a.getAndIncrement();
+    //System.out.println(a.get());
     System.out.println(o);
 });
 ```
