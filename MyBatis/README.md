@@ -230,7 +230,7 @@ Hikari——由日本人研发,号称史上最快连接池
 1. 下载jar包 druid-1.x.x.jar
 2. 定义配置文件
 3.  加载配置文件，Properties
-4.  获取数据库连接对象：通过工厂类来获取
+4.  获取数据库连接对象：通过工厂类来获取`DruidDataSourceFactory.createDataSource(prop);`
 5.   获取连接：`getConnection()`
 6. 创建声明：`getConnection()`
 7. 执行查询：`createStatement()`
