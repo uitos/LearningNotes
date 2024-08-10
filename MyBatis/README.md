@@ -325,3 +325,46 @@ public class DruidUtil {
 JDBC中作用是——销毁
 
 连接池中作用是——归还
+
+# Mybatis
+
+
+
+
+
+
+
+## 常见报错
+
+
+
+<font color="red">`org.apache.ibatis.exceptions.TooManyResultsException: Expected one result (or null) to be returned by selectOne(), but found: 2`</font>
+
+
+
+<font color="red">`Caused by: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Data too long for column 'name' at row 1`</font>
+
+
+
+<font color="red">`Caused by: java.sql.SQLIntegrityConstraintViolationException: Column 'name' cannot be null`</font>
+
+
+
+<font color="red">`Caused by: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '411381200202193234' for key 'student.id_number'`</font>
+
+
+
+<font color="red">`Caused by: java.sql.SQLException: Column count doesn't match value count at row 1`</font>
+
+
+
+<font color="red"></font>
+
+
+
+
+
+
+
+
+
