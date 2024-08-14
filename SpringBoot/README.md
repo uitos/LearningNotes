@@ -36,7 +36,7 @@
 
 **PRE**：预览版本。
 
-**M版本：**M1,M2,M3中的M是milestone的简写，这个单词是里程碑的意思。
+**M版本**：M1,M2,M3中的M是milestone的简写，这个单词是里程碑的意思。
 
 **Alpha**：也被称为内部测试版或预览版，这些版本通常不会对外部用户公开，因为它们可能包含许多尚未修复的漏洞和不完整的功能。通常只有开发团队和其他内部相关人士才能访问和使用 Alpha 版本。
 
@@ -61,6 +61,24 @@
 Spring Boot 3.2.8 requires [Java 17](https://www.java.com/) and is compatible up to and including Java 22. [Spring Framework 6.1.11](https://docs.spring.io/spring-framework/reference/6.1/) or above is also required.
 
 > Spring Boot 3.2.8 要求使用 Java 17，并且兼容直至包括 Java 22。还需要 Spring Framework 6.1.11 或更高版本
+
+
+
+下面的表格列出了SpringBoot版本、JDK版本的兼容性，以及兼容性的来源，都在spring-boot的各个版本的文档中，有链接、描述java版本的原文。
+
+| **SpringBoot Versions** | **JDK Versions** | Froms                                                        |
+| ----------------------- | ---------------- | ------------------------------------------------------------ |
+| 0.0 -1.1                | 6+(6 or higher)  | https://docs.spring.io/spring-boot/docs/0.0.x/reference/html/getting-started-installing-spring-boot.html<br/>Spring Boot can be used with “classic” Java development tools or installed as a command line tool. Regardless, you will need Java SDK v1.6 or higher.<br/>https://docs.spring.io/spring-boot/docs/1.0.x/reference/html/getting-started-installing-spring-boot.html<br/>Spring Boot can be used with “classic” Java development tools or installed as a command line tool. Regardless, you will need Java SDK v1.6 or higher.<br/>https://docs.spring.io/spring-boot/docs/1.1.x/reference/html/getting-started-installing-spring-boot.html<br/>Spring Boot can be used with “classic” Java development tools or installed as a command line tool. Regardless, you will need Java SDK v1.6 or higher.<br/> |
+| 1.2 - 1.5               | 6 - 7            | https://docs.spring.io/spring-boot/docs/1.2.x/reference/html/getting-started-system-requirements.html<br/>By default, Spring Boot 1.2.8.RELEASE requires Java 7 and Spring Framework 4.1.5 or above. You can use Spring Boot with Java 6 with some additional configuration.<br/>https://docs.spring.io/spring-boot/docs/1.3.x/reference/html/getting-started-system-requirements.html<br/>By default, Spring Boot 1.3.8.RELEASE requires Java 7 and Spring Framework 4.2.8.RELEASE or above. You can use Spring Boot with Java 6 with some additional configuration.<br/>https://docs.spring.io/spring-boot/docs/1.4.x/reference/html/getting-started-system-requirements.html<br/>By default, Spring Boot 1.4.7.RELEASE requires Java 7 and Spring Framework 4.3.9.RELEASE or above. You can use Spring Boot with Java 6 with some additional configuration.<br/>https://docs.spring.io/spring-boot/docs/1.5.x/reference/html/getting-started-system-requirements.html<br/>By default, Spring Boot 1.5.22.RELEASE requires Java 7 and Spring Framework 4.3.25.RELEASE or above. You can use Spring Boot with Java 6 with some additional configuration.<br/> |
+| 2.0                     | 8 - 9            | https://docs.spring.io/spring-boot/docs/2.0.x/reference/html/getting-started-system-requirements.html<br/>Spring Boot 2.0.9.RELEASE requires Java 8 or 9 and Spring Framework 5.0.13.RELEASE or above.<br/> |
+| 2.1                     | 8 - 12           | https://docs.spring.io/spring-boot/docs/2.1.x/reference/html/getting-started-system-requirements.html<br/>Spring Boot 2.1.18.RELEASE requires Java 8 and is compatible up to Java 12 (included).<br/> |
+| 2.2 - 2.3               | 8 - 15           | https://docs.spring.io/spring-boot/docs/2.2.x/reference/html/getting-started.html#getting-started-system-requirements<br/>Spring Boot 2.2.13.RELEASE requires Java 8 and is compatible up to Java 15 (included).<br/>https://docs.spring.io/spring-boot/docs/2.3.x/reference/html/getting-started.html#getting-started-system-requirements<br/>Spring Boot 2.3.12.RELEASE requires Java 8 and is compatible up to Java 15 (included).<br/> |
+| 2.4                     | 8 - 16           | https://docs.spring.io/spring-boot/docs/2.4.x/reference/html/getting-started.html#getting-started-system-requirements<br/>Spring Boot 2.4.13 requires Java 8 and is compatible up to Java 16 (included).<br/> |
+| 2.5                     | 8 - 18           | https://docs.spring.io/spring-boot/docs/2.5.x/reference/html/getting-started.html#getting-started.system-requirements<br/>Spring Boot 2.5.15 requires Java 8 and is compatible up to and including Java 18.<br/> |
+| 2.6                     | 8 - 19           | https://docs.spring.io/spring-boot/docs/2.6.x/reference/html/getting-started.html#getting-started.system-requirements<br/> |
+| 2.7                     | 8 - 21           | https://docs.spring.io/spring-boot/docs/2.7.x/reference/html/getting-started.html#getting-started.system-requirements<br/>Spring Boot 2.7.18 requires Java 8 and is compatible up to and including Java 21.<br/> |
+| 3.0 - 3.2               | 17 - 21          | https://docs.spring.io/spring-boot/docs/3.0.x/reference/html/getting-started.html#getting-started<br/>Spring Boot 3.0.13 requires Java 17 and is compatible up to and including Java 21.<br/>https://docs.spring.io/spring-boot/docs/3.1.x/reference/html/getting-started.html#getting-started<br/>Spring Boot 3.1.6 requires Java 17 and is compatible up to and including Java 21.<br/>https://docs.spring.io/spring-boot/docs/3.2.x/reference/html/getting-started.html#getting-started<br/>Spring Boot 3.2.0 requires Java 17 and is compatible up to and including Java 21.<br/> |
+|                         |                  |                                                              |
 
 
 
