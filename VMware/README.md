@@ -6,13 +6,13 @@
 
 ## 安装
 
-找到下载好的VMware-workstation-full-xx.x.x-xxxx.exe，鼠标双击应用安装程序
+找到下载好的VMware-workstation-full-xx.x.x-xxxx.exe，鼠标双击应用程序
 
 ![image-20240810235707092](images/image-20240810235707092.png)
 
 点击"下一步"
 
-![image-20240810220432724](images/image-20240810220432724.png)
+<img src="images/image-20240810220432724.png" alt="image-20240810220432724"  />
 
 
 

@@ -330,6 +330,14 @@ JDBC中作用是——销毁
 
 
 
+模糊查询
+
+用mysql的concat()语句拼接
+
+```
+concat('%',#{name},'%')
+```
+
 
 
 
@@ -359,8 +367,6 @@ JDBC中作用是——销毁
 
 
 <font color="red"></font>
-
-
 
 
 
