@@ -26,5 +26,19 @@
 21.MVCC实现原理
 22.SpringBoot怎么解决循环依赖的
 
+switch 中可以使用 String 吗？
+
+Switch中使用String需要注意一下几点:
+
+**在 Java 7之前，实现基于字符串的条件流的唯一方法是使用 if-else 条件。 但是 Java 7也改进了 switch case 来支持 String。**
+
+1.switch能够取代 if-else-if条件链使得代码更加简洁易读
+2.switch比较的时候区分大小写,输出的例子也说明了这一点
+3.Java中switch是通过String.equals 方法来比较传递值和case值，所以请确保添加 NULL 检查以避免 NullPointerException
+4.java 编译器为 Switch 语句中的字符串生成比链式 if-else-if 条件语句更有效的字节码
+5.Java switch case String只能在Java7或更高的版本中使用，否则它会抛出异常
+
+String str = new String("abc");创建了几个对象，为什么？
+
 
 
