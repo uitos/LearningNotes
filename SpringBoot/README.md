@@ -134,7 +134,7 @@ server.port=8080
 server.servlet.context-path=/
 ```
 
-# SprintBoot结合Mybatis
+# SpringBoot配置Mybatis
 
 ```properties
 #配置数据库连接信息
@@ -152,7 +152,11 @@ mybatis.configuration.map-underscore-to-camel-case=true
 mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 ```
 
-# SprintBoot注解
+# SpringBoot配置Druid
+
+
+
+# SpringBoot注解
 
 @RequestMapping
 
@@ -242,3 +246,105 @@ public  method(){
 
 
 @RestController
+
+# Spring IOC&DI
+
+IOC——Inversion of Control控制反转
+对象的创建权限交给Spring，并把创建好的对象存到容器里(其实就是一个map集合)
+
+DI——Dependency Injection依赖注入
+自动注入放到IOC容器中的对象
+
+实际就是给属性自动赋值
+
+通过类名取对象
+
+Bean——Spring Bean
+
+# 面试题
+
+说说SpringBoot加载启动流程
+
+说说SringIOC控制反转流程
+
+如何进行依赖注入
+
+说说Spring中用到类哪些设计模式
+
+说说Springboot开发中的常见注解以及作用?
+
+说说@Resource与@Autowire的区别
+
+# 报错
+
+2024-08-17T16:04:14.879+08:00 ERROR 3564 --- [tlias] [reate-379056819] com.alibaba.druid.pool.DruidDataSource   : create connection SQLException, url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai, errorCode 0, state 08001
+
+<font color="red">`java.sql.SQLNonTransientConnectionException: Public Key Retrieval is not allowed`</font>
+
+
+
+原因：可能，SpringBoot运行过程中，mysql服务重新启动了，导致报错
+
+具体原因未知...
+
+解决，cmd控制台，开启mysql服务，输入用户名和密码连接mysql，重启SprintBoot项目
+
+启动mysql服务
+
+```shell
+net start mysql
+```
+
+登录mysql
+
+```shell
+mysql -u root -p
+```
+
+登出mysql
+
+```shell
+exit
+```
+
+
+
+
+
+2024-08-17T16:14:02.051+08:00 ERROR 7404 --- [tlias] [eate-1704979234] com.alibaba.druid.pool.DruidDataSource   : create connection SQLException, url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai, errorCode 0, state 08S01
+
+<font color="red">`com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure`</font>
+
+
+
+
+
+原因：SpringBoot运行过程中，mysql服务停止，导致报错
+
+
+
+## properties文件乱码
+
+1. 设置Properties files 的默认编码
+
+File->Settings->Editor->File Encodings
+
+![image-20240814200720453](images/image-20240814200720453.png)
+
+2. 如果重启IDEA仍然乱码，则可以尝试清除IDEA缓存
+
+File->Invalidate Caches
+
+![image-20240817164441848](images/image-20240817164441848.png)
+
+3. 勾选第一、第二单选框->点击“Invalidate and Restart”
+
+   Clear file system cache and Local History
+
+   > 清除文件系统缓存和本地历史记录
+
+   Clear VCS Log caches and indexes
+
+   > 清除VCS日志缓存和索引
+
+![image-20240817164510591](images/image-20240817164510591.png)
