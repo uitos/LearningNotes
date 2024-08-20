@@ -261,6 +261,286 @@ DI——Dependency Injection依赖注入
 
 Bean——Spring Bean
 
+
+
+
+
+# Transcation 事务
+
+
+
+抛出RuntimeException和Error的异常才会RollBack回滚
+
+private修饰的方法上，事务会失效
+
+搭配try catch 事务会失效，除非在catch中
+
+
+
+# SpringBoot配置对象存储
+
+## 腾讯云COS
+
+1.登录到腾讯云平台[https://cloud.tencent.com](https://cloud.tencent.com)
+
+进入控制台
+
+![image-20240820204917221](images/image-20240820204917221.png)
+
+有账号->登录
+
+无账号->注册
+
+![image-20240820205028969](images/image-20240820205028969.png)
+
+搜索框输入：对象存储，
+
+控制台入口中，点击对象存储
+
+![image-20240820205530499](images/image-20240820205530499.png)
+
+### 创建存储桶Backet
+
+存储桶列表->创建存储桶
+
+![image-20240820205854249](images/image-20240820205854249.png)
+
+
+
+![image-20240820210249066](images/image-20240820210249066.png)
+
+
+
+![image-20240820210903016](images/image-20240820210903016.png)
+
+
+
+默认选项，点击”下一步“
+
+![image-20240820211107733](images/image-20240820211107733.png)
+
+点击“创建”
+
+![image-20240820211214178](images/image-20240820211214178.png)
+
+
+
+![image-20240820214428701](images/image-20240820214428701.png)
+
+
+
+![image-20240820214539040](images/image-20240820214539040.png)
+
+
+
+![image-20240820214609212](images/image-20240820214609212.png)
+
+
+
+
+
+### 获取Secretld和SecretKey
+
+创建子用户
+
+搜索访问管理->点击“访问管理”
+
+![image-20240820212240257](images/image-20240820212240257.png)
+
+
+
+![image-20240820212621011](images/image-20240820212621011.png)
+
+![image-20240820212657653](images/image-20240820212657653.png)
+
+![image-20240820213130991](images/image-20240820213130991.png)
+
+取消勾选策略
+
+![image-20240820213218615](images/image-20240820213218615.png)
+
+![image-20240820213243175](images/image-20240820213243175.png)
+
+
+
+![image-20240820213331519](images/image-20240820213331519.png)
+
+![image-20240820213606917](images/image-20240820213606917.png)
+
+
+
+![image-20240820213646107](images/image-20240820213646107.png)
+
+创建SecretKey
+
+下载CSV文件或复制
+
+勾选“我已知晓并保存SecretKey”
+
+点击“确定”
+
+![image-20240820213728517](images/image-20240820213728517.png)
+
+
+
+对象存储文档https://cloud.tencent.com/document/product/436
+
+### 安装 SDK
+
+用户可以通过 maven 和源码两种方式安装 Java SDK：
+
+maven 安装 在 maven 工程的 pom.xml 文件中添加相关依赖，内容如下：
+
+```xml
+<dependency>
+     <groupId>com.qcloud</groupId>
+     <artifactId>cos_api</artifactId>
+     <version>5.6.227</version>
+</dependency>
+```
+
+**注意：**
+
+依赖坐标可能并非最新版本，请 [单击此处](https://mvnrepository.com/artifact/com.qcloud/cos_api) 获取最新版本。
+
+
+
+![image-20240820220611785](images/image-20240820220611785.png)
+
+配置工具类TXCOSUtil
+
+```java
+package com.itheima.tlias.utils;
+import com.qcloud.cos.COSClient;
+import com.qcloud.cos.ClientConfig;
+import com.qcloud.cos.auth.BasicCOSCredentials;
+import com.qcloud.cos.auth.COSCredentials;
+import com.qcloud.cos.exception.CosClientException;
+import com.qcloud.cos.exception.CosServiceException;
+import com.qcloud.cos.http.HttpProtocol;
+import com.qcloud.cos.model.ObjectMetadata;
+import com.qcloud.cos.region.Region;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.UUID;
+
+
+@Data
+@Slf4j
+public class TXCOSUtil {
+    /**
+     * 拥有桶权限的子用户的SecretId
+     */
+    private static String secretId="";
+    /**
+     *  拥有桶权限的子用户的SecretKey
+     */
+    private static String secretKey="";
+    /**
+     * 所属地域：ap-nanjing
+     */
+    private static String region="";
+    /**
+     * 存储桶名称：tilas-1300000009
+     */
+    private static String bucketName="";
+
+    /**
+     * 初始化用户身份信息
+     */
+
+    /**
+     * 设置bucket的区域
+     */
+
+    /**
+     * 生成COS客户端
+     */
+
+    private TXCOSUtil() {}
+
+
+    /**
+     * 上传文件
+     * @param file
+     * @return
+     */
+    public static String upload(MultipartFile file) {
+        //拆分文件后缀（类型）
+        String originalFilename = file.getOriginalFilename();
+        int i = originalFilename.lastIndexOf(".");
+        String suffix = originalFilename.substring(i);
+        //生成不重复id
+        String uuid = UUID.randomUUID().toString();
+        //填写object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt
+        String objectName = uuid+suffix;
+        // 创建COSClient实例。
+        COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
+        ClientConfig clientConfig = new ClientConfig(new Region(region));
+        clientConfig.setHttpProtocol(HttpProtocol.https);
+        COSClient cosClient = new COSClient(cred, clientConfig);
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        try {
+            // 创建PutObject请求。
+//            cosClient.putObject(bucketName,objectName,new ByteArrayInputStream(bytes),objectMetadata);
+            cosClient.putObject(bucketName,objectName,file.getInputStream(),objectMetadata);
+        } catch (CosServiceException cse) {
+            System.out.println("Caught an OSSException, which means your request made it to OSS, "
+                               + "but was rejected with an error response for some reason.");
+            System.out.println("Request ID:" + cse.getRequestId());
+            System.out.println("Error traceId:" + cse.getTraceId());
+            System.out.println("Error statusCode:" + cse.getStatusCode());
+            System.out.println("Error errorType:" + cse.getErrorType());
+            System.out.println("Error Code:" + cse.getErrorCode());
+            System.out.println("Error Message:" + cse.getErrorMessage());
+        } catch (CosClientException ce) {
+            System.out.println("Caught an ClientException, which means the client encountered "
+                               + "a serious internal problem while trying to communicate with OSS, "
+                               + "such as not being able to access the network.");
+            System.out.println("Error Message:" + ce.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (cosClient != null) {
+                cosClient.shutdown();
+            }
+        }
+        //https://<bucketName>.cos.<region>.myqcloud.com
+        //文件访问路径规则 https://BucketName.Endpoint/ObjectName
+        StringBuilder stringBuilder = new StringBuilder("https://");
+        stringBuilder
+                .append(bucketName)
+                .append(".cos.")
+                .append(region)
+                .append(".myqcloud.com/")
+                .append(objectName);
+
+        log.info("文件上传到:{}", stringBuilder.toString());
+        return stringBuilder.toString();
+    }
+}
+```
+
+测试文件上传
+
+```java
+@RestController
+@RequestMapping("/upload")
+@Slf4j
+public class UploadController {
+
+    @PostMapping
+    public ResultUtil upload(MultipartFile file){
+        String path = TXCOSUtil.upload(file);
+        log.info("path={}",path);
+        return ResultUtil.success();
+    }
+}
+```
+
 # 面试题
 
 说说SpringBoot加载启动流程
@@ -275,13 +555,15 @@ Bean——Spring Bean
 
 说说@Resource与@Autowire的区别
 
+什么情况下Spring的事务会失效,怎么解决?
+
 # 报错
 
-2024-08-17T16:04:14.879+08:00 ERROR 3564 --- [tlias] [reate-379056819] com.alibaba.druid.pool.DruidDataSource   : create connection SQLException, url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai, errorCode 0, state 08001
+## Public Key Retrieval is not allowed
 
-<font color="red">`java.sql.SQLNonTransientConnectionException: Public Key Retrieval is not allowed`</font>
-
-
+<font color="red">
+`2024-08-17T16:04:14.879+08:00 ERROR 3564 --- [tlias] [reate-379056819] com.alibaba.druid.pool.DruidDataSource   : create connection SQLException, url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai, errorCode 0, state 08001
+java.sql.SQLNonTransientConnectionException: Public Key Retrieval is not allowed`</font>
 
 原因：可能，SpringBoot运行过程中，mysql服务重新启动了，导致报错
 
@@ -309,7 +591,7 @@ exit
 
 
 
-
+## Communications link failure
 
 2024-08-17T16:14:02.051+08:00 ERROR 7404 --- [tlias] [eate-1704979234] com.alibaba.druid.pool.DruidDataSource   : create connection SQLException, url: jdbc:mysql://localhost:3306/tlias?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai, errorCode 0, state 08S01
 
