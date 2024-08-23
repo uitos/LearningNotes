@@ -1,3 +1,21 @@
+# 面试题
+
+说说SpringBoot加载启动流程
+
+说说SringIOC控制反转流程
+
+如何进行依赖注入
+
+说说Spring中用到类哪些设计模式
+
+说说Springboot开发中的常见注解以及作用?
+
+说说@Resource与@Autowire的区别
+
+什么情况下Spring的事务会失效,怎么解决?
+
+
+
 # Tomcat
 
 下载
@@ -541,23 +559,9 @@ public class UploadController {
 }
 ```
 
-# 面试题
 
-说说SpringBoot加载启动流程
 
-说说SringIOC控制反转流程
-
-如何进行依赖注入
-
-说说Spring中用到类哪些设计模式
-
-说说Springboot开发中的常见注解以及作用?
-
-说说@Resource与@Autowire的区别
-
-什么情况下Spring的事务会失效,怎么解决?
-
-# 报错
+# SpringBoot报错记录
 
 ## Public Key Retrieval is not allowed
 
@@ -630,3 +634,94 @@ File->Invalidate Caches
    > 清除VCS日志缓存和索引
 
 ![image-20240817164510591](images/image-20240817164510591.png)
+
+# 登录认证与拦截
+
+## Cookie
+
+## Seeeion
+
+
+
+## 登录流程
+
+## JWT（JSON Web Token）
+
+官网https://jwt.io/
+
+数字签名技术
+
+格式——以JSON格式传输共享数据
+
+
+
+
+
+利用JWT生成Token
+
+## Filter过滤器
+
+> **Filter**
+>
+> **/ˈfɪltər/**
+
+Filter
+
+过滤链放行
+
+
+
+## Interceptor拦截器
+
+> **Interceptor**
+>
+> **/ˌɪntərˈseptər/**
+
+## Filter（拦截器）和Interceptor（过滤器）区别
+
+相同点：
+
+Filter
+
+# AOP面向切面编程
+
+Aspect Oriented Programming面向切面编程
+
+> 
+
+
+
+## AOP与OOP
+
+AOP
+
+> **Aspect Oriented Programming**
+>
+> **/ˈæspekt  ˈɔːrientɪd  ˈproʊɡræmɪŋ/**
+>
+>  面向切面编程
+>
+> 处理面向对象编程中业务需求重复的部分，作为横切面插入到面向对象当中，一般有固定的应用场景
+>
+> 例如：日志记录，登录校验，数据验证，统计耗时，事务管理等
+
+****
+
+OOP
+
+> **Object Oriented Programming**
+>
+> **/ˈɑːbdʒekt/  ˈɔːrientɪd  ˈproʊɡræmɪŋ/**
+>
+> 面向对象编程
+>
+> 处理业务逻辑
+
+## AOP优点
+
+灵活性
+
+降低耦合度
+
+提高开发效率
+
