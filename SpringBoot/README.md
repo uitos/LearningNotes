@@ -34,6 +34,60 @@
 
 [SpringBoot 官网](https://spring.io/projects/spring-boot)
 
+
+
+## 创建SprintBoot工程
+
+在线创建
+
+打开[ https://start.spring.io/](https://start.spring.io/)
+
+
+
+## IDEA新建项目
+
+IDEA->New Project
+
+
+
+![image-20240814204604788](images/image-20240814204604788.png)
+
+![image-20240814200236773](images/image-20240814200236773.png)
+
+![image-20240812180925546](images/image-20240812180925546.png)
+
+
+
+![image-20240812180943703](images/image-20240812180943703.png)
+
+![image-20240812180958887](images/image-20240812180958887.png)
+
+![image-20240812181033775](images/image-20240812181033775.png)
+
+## 初始化项目
+
+配置Maven
+
+
+
+![image-20240814201409545](images/image-20240814201409545.png)
+
+配置properties文件编码为UTF-8
+
+![image-20240814200720453](images/image-20240814200720453.png)
+
+## 基本配置
+
+application.properties
+
+```properties
+spring.application.name=SprintBootDemo
+#配置tomcat端口号
+server.port=8080
+#配置Servlet项目路径
+server.servlet.context-path=/
+```
+
 ## 查看SpringBoot依赖的JDK版本
 
 1.打开Sprint官方网站
@@ -100,59 +154,9 @@ Spring Boot 3.2.8 requires [Java 17](https://www.java.com/) and is compatible up
 
 
 
-## 创建SprintBoot工程
-
-在线创建
-
-打开[ https://start.spring.io/](https://start.spring.io/)
 
 
-
-## IDEA新建项目
-
-IDEA->New Project
-
-
-
-![image-20240814204604788](images/image-20240814204604788.png)
-
-![image-20240814200236773](images/image-20240814200236773.png)
-
-![image-20240812180925546](images/image-20240812180925546.png)
-
-
-
-![image-20240812180943703](images/image-20240812180943703.png)
-
-![image-20240812180958887](images/image-20240812180958887.png)
-
-![image-20240812181033775](images/image-20240812181033775.png)
-
-## 初始化项目
-
-配置Maven
-
-
-
-![image-20240814201409545](images/image-20240814201409545.png)
-
-配置properties文件编码为UTF-8
-
-![image-20240814200720453](images/image-20240814200720453.png)
-
-## 基本配置
-
-application.properties
-
-```properties
-spring.application.name=SprintBootDemo
-#配置tomcat端口号
-server.port=8080
-#配置Servlet项目路径
-server.servlet.context-path=/
-```
-
-# SpringBoot配置Mybatis
+# SpringBoot整合Mybatis
 
 ```properties
 #配置数据库连接信息
@@ -170,7 +174,7 @@ mybatis.configuration.map-underscore-to-camel-case=true
 mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 ```
 
-# SpringBoot配置Druid
+# SpringBoot整合Druid
 
 
 
@@ -637,33 +641,257 @@ File->Invalidate Caches
 
 # 登录认证与拦截
 
-## Cookie
+## 会话技术
 
-## Seeeion
+什么是会话?
+
+> 一个用户的多个HTTP操作，代表一个用户操作的完整流程
+
+为什么会出现会话技术?
+
+> 在Web开发领域，会话机制是用于跟踪客户状态的普遍解决方案
+>
+> Http是无状态协议，所谓无状态指的是多次客户端与服务端的Http响应之间无法共享数据
+>
+> 一些特殊场景比如购物车的添加需要在Http请求当中添加额外数据跟踪客户信息以保存到不同的购物车当中
+
+会话跟踪技术有两种：
+
+1. Cookie（客户端会话跟踪技术）
+   - 数据存储在客户端浏览器当中
+2. Session（服务端会话跟踪技术）
+   - 数据存储在储在服务端
+3. 令牌技术
+
+常见的会话技术
+
++ 客户端(Cookie)
++ 服务端(Session)
++ 令牌(token)技术
+
+### Cookie
+
+Cookie（客户端会话跟踪技术）
+
+Cookie是HTTP提供的用于共享多次HTTP请求之间的数据的技术
+
+> 数据存储在客户端浏览器当中
+>
+> 采用键值对（Key-Value）格式，通过分号和空格分隔：
+>
+> 例如：username=admin; password=123456
+
+**优缺点**
+
+- 优点：HTTP协议中支持的技术（像Set-Cookie 响应头的解析以及 Cookie 请求头数据的携带，都是浏览器自动进行的，是无需我们手动操作的）
+- 缺点：
+  - 移动端APP(Android、IOS)中无法使用Cookie
+  - 不安全，用户可以自己禁用Cookie
+  - Cookie不能跨域
+
+```java
+/**
+ * Cookie控制器类
+ * 处理与cookie相关的HTTP请求
+ */
+@RestController
+@RequestMapping("/cookie")
+public class TestCookieController {
+
+    /**
+     * 处理保存cookie的GET请求
+     * 创建并添加两个cookie（username和password）到HTTP响应中
+     *
+     * @param response HTTP响应对象，用于添加cookie
+     * @return 表示操作成功的结果对象
+     */
+    @GetMapping("/save")
+    public Result saveCookie(HttpServletResponse response){
+        // 创建并添加username cookie
+        Cookie cookie = new Cookie("username","admin");
+        response.addCookie(cookie);
+        // 创建并添加password cookie
+        Cookie cookie1 = new Cookie("password", "123456");
+        response.addCookie(cookie1);
+        return Result.success();
+    }
+
+    /**
+     * 处理获取cookie的GET请求
+     * 从HTTP请求中读取所有cookie，并将它们以JSON对象的形式返回
+     *
+     * @param request HTTP请求对象，用于获取cookie
+     * @return 包含所有cookie的JSON对象的结果
+     */
+    @GetMapping("/get")
+    public Result getCookie(HttpServletRequest request){
+        // 获取所有cookie
+        Cookie[] cookies = request.getCookies();
+        JSONObject jsonObject = new JSONObject();
+        // 遍历cookie数组，将cookie内容添加到JSON对象中
+        for (Cookie cookie : cookies) {
+            jsonObject.put(cookie.getName(),cookie.getValue());
+        }
+        // 返回包含所有cookie的JSON对象，表示操作成功
+        return Result.success(jsonObject);
+    }
+}
+```
+
+访问接口，http://localhost:8080//cookie/save
+
+![image-20240824152133913](images/image-20240824152133913.png)
+
+通过响应头Set-Cookie响应给浏览器，并且浏览器会将Cookie，存储在浏览器
+
+![image-20240824152010432](images/image-20240824152010432.png)
+
+访问接口，http://localhost:8080//cookie/get
+
+服务端从HTTP请求中读取所有cookie，并将它们以JSON对象的形式返回给前端
+
+![image-20240824154332560](images/image-20240824154332560.png)
+
+### Seeeion
+
+Session（服务端会话跟踪技术）
+
+Session是Servlet提供的用于共享多次Http请求之间的共享数据
+
+> 数据存储在储在服务端
+>
+> 基于Cookie存储
+> K
+> 		SESSIONID
+> V
+> 		存在服务端
+
+**优缺点**
+
+- 优点：Session是存储在服务端的，安全
+- 缺点：
+  - 服务器集群环境下无法直接使用Session
+  - 移动端APP(Android、IOS)中无法使用Cookie
+  - 用户可以自己禁用Cookie
+  - Cookie不能跨域
+
+> PS：Session 底层是基于Cookie实现的会话跟踪，如果Cookie不可用，则该方案，也就失效了。
 
 
 
-## 登录流程
+```java
+/**
+ * Session控制类
+ * 提供保存会话信息的接口
+ */
+@Slf4j
+@RestController
+@RequestMapping("/session")
+public class TestSessionController {
+
+    /**
+     * 保存会话信息方法
+     * 模拟将用户名和密码保存到会话中，通常用于登录等场景
+     *
+     * @param session HttpSession对象，用于操作会话
+     * @return 操作结果，成功或失败
+     */
+    @GetMapping("/save")
+    public Result saveSession(HttpSession session) {
+        log.info("HttpSession-save: {}", session.hashCode());
+        session.setAttribute("username", "admin");
+        session.setAttribute("password", "123456");
+        return Result.success();
+    }
+
+    /**
+     * 使用HTTP GET方法处理/get路径的请求，用于获取会话信息
+     * 该方法主要目的是从当前的HTTP会话中检索用户名和密码，并返回它们的组合字符串
+     *
+     * @param session 当前的HTTP会话对象，用于存储和检索会话相关的属性
+     * @return 包含用户名和密码的Result对象，表示请求的处理结果
+     */
+    @GetMapping("/get")
+    public Result getSession(HttpSession session) {
+        // 记录HTTP会话对象的信息，以便于跟踪和调试
+        log.info("HttpSession-get: {}", session.hashCode());
+        // 从会话中获取存储的用户名和密码
+        String username = (String) session.getAttribute("username");
+        String password = (String) session.getAttribute("password");
+        // 记录获取到的用户名和密码，以便于跟踪和调试
+        log.info("username:{},password:{}", username, password);
+        // 返回包含用户名和密码的结果对象
+        return Result.success(username + ":" + password);
+    }
+}
+
+```
+
+访问接口，http://localhost:8080/session/save
+
+![image-20240824155354530](images/image-20240824155354530.png)
+
+请求完成之后，在响应头中，就会看到有一个Set-Cookie的响应头，里面响应回来了一个Cookie，就是JSESSIONID，这个就是服务端会话对象 Session 的ID。
+
+
+
+访问接口，http://localhost:8080/session/get
+
+![image-20240824155416906](images/image-20240824155416906.png)
+
+接下来，在后续的每次请求时，都会将Cookie的值，携带到服务端，那服务端呢，接收到Cookie之后，会自动的根据JSESSIONID的值，找到对应的会话对象Session。
+
+通过这两步测试之后，在控制台中输出如下日志：
+
+![image-20240824155619378](images/image-20240824155619378.png)
+
+两次请求，获取到的Session会话对象的hashcode是一样的，就说明是同一个会话对象。
+
+而且，第一次请求时，往Session会话对象中存储的值，第二次请求时，也获取到了。那这样，我们就可以通过Session会话对象，在同一个会话的多次请求之间来进行数据共享了。
+
+
+
+### 令牌技术
+
+**优缺点**
+
+- 优点：
+  - 支持PC端、移动端
+  - 解决集群环境下的认证问题
+  - 减轻服务器的存储压力（无需在服务器端存储）
+- 缺点：需要自己实现（包括令牌的生成、令牌的传递、令牌的校验）
+
+
 
 ## JWT（JSON Web Token）
 
-官网https://jwt.io/
+JWT全称：JSON Web Token（官网https://jwt.io/）
 
-数字签名技术
+**用于对应用程序上的用户进行身份验证的标记**
 
-格式——以JSON格式传输共享数据
+——以JSON格式传输共享数据
 
-
+JWT的组成：JWT由三个部分组成，三个部分之间使用英文的点来分割
 
 
 
 利用JWT生成Token
 
+- 第一部分：Header(头）， 记录令牌类型、签名算法等。 例如：{"alg":"HS256","type":"JWT"}
+
+- 第二部分：Payload(有效载荷），携带一些自定义信息、默认信息等。 例如：{"id":"1","username":"Tom"}
+
+- 第三部分：Signature(签名），防止Token被篡改、确保安全性。将header、payload，并加入指定秘钥，通过指定签名算法计算而来。
+
+![image-20230106085442076](images/image-20230106085442076.png)
+
+
+
+
+
 ## Filter过滤器
 
-> **Filter**
->
-> **/ˈfɪltər/**
+> **Filter**读音：**/ˈfɪltər/**
 
 Filter
 
@@ -673,15 +901,43 @@ Filter
 
 ## Interceptor拦截器
 
-> **Interceptor**
->
-> **/ˌɪntərˈseptər/**
+> **Interceptor**读音：**/ˌɪntərˈseptər/**
+
+
 
 ## Filter（拦截器）和Interceptor（过滤器）区别
 
-相同点：
+**相同点：**
 
-Filter
+> 都执行在Controller(Servlet)之前
+
+**不同点：**
+
++ 技术提供方：
+
+  > Filter过滤器——Servlet
+  >
+  > Interceptor拦截器——Spring
+
++ 执行顺序
+
+  > 先执行Filter过滤器
+  >
+  > 后执行Interceptor过滤器
+
++ 执行粒度
+
+  > Filter过滤器，过滤力度粗
+  >
+  > ——通常用于编码转换、时间格式转换
+  >
+  > Interceptor拦截器，过滤粒度细
+  >
+  > ——通常用于登录认证、接口日志记录
+
+
+
+## 登录流程
 
 # AOP面向切面编程
 
