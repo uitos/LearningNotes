@@ -43,8 +43,8 @@ Apache软件基金会下的一款用于构建java项目的开源软件
    这个阶段通常用于生成项目报告和其他文档。
    命令：`mvn site`
 10. deploy
-   目的：将打包后的项目部署到远程仓库，供其他开发人员或项目使用。
-   命令：`mvn deploy`
+      目的：将打包后的项目部署到远程仓库，供其他开发人员或项目使用。
+      命令：`mvn deploy`
 
 # Maven 的下载安装
 
@@ -118,3 +118,38 @@ https://mvnrepository.com/
 </build>
 ```
 
+
+
+```xml
+<!--        mybatis分页插件 主要提供三个功能
+            1.自动计算分页
+            2.自动执行计算总数的sql
+            3.提供统一的分页类（PageInfo）-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+```
+
+
+
+```xml
+<!--    SprintBoot优雅参数校验-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+```
+
+
+
+```xml
+<!--        apache commons集合工具包-> 针对jdk中的集合框架提出的-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+            <version>4.4</version>
+        </dependency>
+```

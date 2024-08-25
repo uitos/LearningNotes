@@ -987,3 +987,58 @@ OOP
 
 提高开发效率
 
+# Springboot配置文件
+
+支持三种格式的配置文件
+
+可以同时存在，属性重复优先级从高到低，推荐使用yml
+
++ application.properties
+
+  > 采用键值对（Key-Value）格式，例如：
+  >
+  > server.port=8080
+  >
+  > server.servlet.context-path=/
+
++ application.yml
+  ——简洁的冒号与缩进格式
+  ——支持定义复杂数据类型
+
+  > + 数组
+  >
+  >   多个值用逗号隔开
+  >
+  >   ```xml
+  >   student:
+  >     subject: java, go, js
+  >   ```
+  >
+  > + list
+  >
+  >   -换行定义，或者使用[]，值用逗号隔开
+  >
+  >   ```xml
+  >   student:
+  >     teachets:
+  >       - lisi
+  >       - wangwu
+  >       - zhaoliu
+  >   ```
+  >
+  > + map
+  >   K : V换行定义或者用{}，多个KV值用逗号隔开
+  >   
+  >   
+  >
+  >  ```xml
+  >   student:
+  >     family: {
+  >       father: list
+  >       ,mathor: wangwu
+  >       , broter: vhaoliu
+>     }
+  >  ```
+  
++ application.yaml
+
