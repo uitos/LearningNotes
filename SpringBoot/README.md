@@ -16,13 +16,15 @@
 
 
 
-# Tomcat
+# 引言
+
+## Tomcat
 
 下载
 
 [Apache Tomcat](https://tomcat.apache.org/)
 
-# Servlet
+### Servlet
 
 
 
@@ -299,7 +301,7 @@ private修饰的方法上，事务会失效
 
 
 
-# SpringBoot配置对象存储
+# SpringBoot配置OSS
 
 ## 腾讯云COS
 
@@ -948,6 +950,10 @@ Aspect Oriented Programming面向切面编程
 
 
 ## AOP与OOP
+
+AOP是OOP的延伸，简单一句话就是对基于面向对象编程的某些业务方法进行增强
+
+****
 
 AOP
 
