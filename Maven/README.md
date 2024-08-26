@@ -153,3 +153,26 @@ https://mvnrepository.com/
             <version>4.4</version>
         </dependency>
 ```
+
+如何使用Maven把项目导入到本地仓库中
+	Maven生命周期
+		clean
+		compile
+		test
+		package
+		install 使用java -jar启动jar包
+		deploy
+	使用步骤
+		先跳过test
+		再执行install
+
+Maven继承
+	子项目可以继承父项目中pom依赖,这样多个子项目如果同时都用到相同的依赖,可以将其直接放在父项目pom当中
+		简化子项目依赖配置
+	实现步骤
+		第一步
+			设置父项目打包方式为pom
+		第二步
+			在子项目pom加入`<parent></parent>`标签指定继承的父项目的Maven坐标
+		第三步
+			`<relativePath></relativePath>`指定父项目的pom文件位置
