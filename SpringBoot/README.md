@@ -1256,6 +1256,87 @@ public class GobalExeceptionHandler {
 ​		java 异常体系
 ​		Spring的全局异常处理
 
+
+
+# Springboot自动配置原理
+
+​	使用@Scope切换Bean作用域
+使用@Lazzy把Bean变成懒加载
+​	组合使用
+​	SpringBean的获取
+​		注入ApplicationContext 容器上下文对象
+​			getBean方法
+​			通过Bean名字获取
+​				@Resource
+​			通过Bean类型获取
+​				@Autowired
+​	Spring Bean 作用域
+​		只会在Web环境中生效,一般用不到
+​		singleton
+​			单例 ,同名称的Bean只有一个(默认)
+​		prototype
+​			多例,每次使用该Bean都会创建新的实例
+​		request
+​			每个请求会创建新的Bean实例
+​		seeeion
+​			每个会话会创建新的Bean实例
+​		application
+​			每个应用范围会创建新的Bean实例
+​	自定义Bean加载到IOC容器中(非常重要)
+​		@Bean
+​		@Configuration
+​		@Condition注解
+​			Bean的判断注解
+​				@ConditionalOnProperty
+​					判断配置文件中是否有该配置项以及对应的值
+​	Springboot自动配置Bean
+​		@Import
+​			导入普通类
+​			导入配置类
+​			导入ImportSelector接口实现类
+​		自己开发@EnableXXXX注解
+​			组合@Import注解
+​	面试题
+​		@Resource与@Autowired的区别
+​			相同点
+​				getBean
+​					doGetBean
+​						IOC容器Map的get
+​			不同点
+​		Spring Bean的作用域有几个
+​		springboot自动配置的原理
+​			把所有要自动装配的类的全限定名放进META-INF/spring/.......imports
+​				springboot2放在类META-INF/.....factories
+​			通过IO流读取到所有全限定名存到一个List<String>集合中
+​			通过反射获取类的构造器创建Bean对象
+​			放到IOC容器中
+
+```
+/**
+ * DI : 从ioc容器中获取已经创建好的对象给属性（或成员变量）赋值
+ * 给一个类的属性（成员变量）赋值，有几种方式：四种
+ * 1.直接等于号赋值
+ * 2.构造器赋值
+ * 3.set方法
+ * 3.反射
+ * @Autowired 一般使用构造器赋值和set方法赋值时
+ * 所以说StringDI注入有三种方式
+ * 字段（属性）DI   @Resource
+ * 构造器DI  @Autowired
+ * set方法DI  @Autowired
+ * @Resource 与@Autowired
+ * 如果一个SpringBean类中值需要注入很少的其他的bean对象————优先使用@Resource
+ * 如果一个SpringBean类中值需要注入很多的其他的bean对象————优先使用@Autowired
+ *
+ */
+```
+
+心跳检测
+
+
+
+
+
 # SpringBoot注解
 
 @RequestMapping

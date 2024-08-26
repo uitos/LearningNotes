@@ -318,3 +318,68 @@ npm insatll
 ```
 
  
+
+# Yarn
+
+
+
+```
+yarn : 无法加载文件 D:\Program Files\nodejs\yarn.ps1，因为在此系统上禁止运行脚本。
+```
+
+先输入 `get-ExecutionPolicy` 查看状态
+Restricted 表示禁用
+
+再输入`set-ExecutionPolicy RemoteSigned`
+
+然后就可以正常使用了
+
+
+
+```
+error Error: certificate has expired
+    at TLSSocket.onConnectSecure (_tls_wrap.js:1502:34)
+    at TLSSocket.emit (events.js:314:20)
+    at TLSSocket._finishInit (_tls_wrap.js:937:8)
+```
+
+这个问题提示是证书过期导致的。
+
+可以尝试禁用[SSL证书](https://so.csdn.net/so/search?q=SSL证书&spm=1001.2101.3001.7020)验证。
+
+```vbnet
+yarn config set strict-ssl false
+```
+
+然后再继续安装。
+
+就可以了。
+
+```
+[2/4] Fetching packages...
+info There appears to be trouble with your network connection. Retrying...
+info There appears to be trouble with your network connection. Retrying...
+info There appears to be trouble with your network connection. Retrying...
+info There appears to be trouble with your network connection. Retrying...
+info There appears to be trouble with your network connection. Retrying...
+error Error: connect ETIMEDOUT 104.16.0.35:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1144:16)
+info Visit https://yarnpkg.com/en/docs/cli/install for documentation about this command.
+```
+
+将strict-ssl设置为false   yarn config set strict-ssl false 重新运行还是会报同样的错
+
+然后将资源地址设置为淘宝镜像
+
+yarn config set registry https://registry.npmmirror.com/
+
+查看设置项 
+
+yarn config get registry
+
+如下
+
+
+
+再次yarn install 成功了
+
