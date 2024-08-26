@@ -253,3 +253,68 @@ npm WARN using --force Recommended protections disabled.
 ```
 
 那就说明需要降低npm的版本了，因为安装的npm版本过高
+
+
+
+
+
+**问题描述：**
+
+近期使用npm淘宝镜像新建项目或依赖时出现报错
+
+**npm ERR! request to https://registry.npm.taobao.org/XXX failed, reason: certificate has expired**
+
+![img](images/1602578-20240322132549321-179440034.png)
+
+ 
+
+**错误原因：**
+
+ 
+
+淘宝镜像过期，具体补充说明如下：
+
+ 
+
+早在 2021 年，淘宝就发文称，npm 淘宝镜像已经从 [http://registry.npm.taobao.org](https://link.zhihu.com/?target=http%3A//registry.npm.taobao.org) 切换到了 [http://registry.npmmirror.com](https://link.zhihu.com/?target=http%3A//registry.npmmirror.com)。旧域名也将于 2022 年 5 月 31 日停止服务（直到 HTTPS 证书到期才真正不能用了）
+
+ 
+
+2024年1 月 22 日，淘宝原镜像域名（[http://registry.npm.taobao.org](https://link.zhihu.com/?target=http%3A//registry.npm.taobao.org)）的 HTTPS 证书正式到期，导致旧的 npm 淘宝镜像在使用时出错了。
+
+ 
+
+**解决方案：**
+
+### 1 清空缓存
+
+```text
+npm cache clean --force
+```
+
+### 2 查看当前的npm镜像设置
+
+```text
+npm config get registry
+```
+
+### 3 切换新源
+
+```text
+npm config set registry https://registry.npmmirror.com
+```
+
+### 4 查看新源是否设置成功
+
+```text
+npm config get registry
+
+```
+
+### 5 可以正常安装需要的工具了
+
+```text
+npm insatll
+```
+
+ 

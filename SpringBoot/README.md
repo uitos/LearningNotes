@@ -180,96 +180,7 @@ mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 
 
 
-# SpringBoot注解
 
-@RequestMapping
-
-@GetMapping
-
-@PostMapping
-
-@RestController
-
-```
-@RequestBody
-```
-
-```
-@RequestBody
-```
-
-```
-@PathVariable
-```
-
-
-
-
-
-@JsonFormat
-
-@JsonIgnore
-
-@JsonIgnoreProperties
-
-@JsonInclude
-
-
-
-@RequestMapping
-
-> `@RequestMapping`是 Spring 框架中的一个核心注解，用于映射 Web 请求到特定的方法上。
->
-> ```java
-> @Target({ElementType.TYPE, ElementType.METHOD})
-> @Retention(RetentionPolicy.RUNTIME)
-> @Documented
-> @Mapping
-> @Reflective({ControllerMappingReflectiveProcessor.class})
-> ```
->
-> 可以被应用到类、接口、枚举`ElementType.TYPE`以及方法`ElementType.METHOD`上
->
-> 声明在**类**上——提取一个controller中的重复路径
->
-> 声明在**方法**上——定义该接口的请求方法被对应的GetMapping、PostMapping等替代了
-
-```java
-@RequestMapping("/dept")
-```
-
-@GetMapping
-
-> `@GetMapping`是Spring框架的一个注解，用于处理Http Get请求
->
-> ```java
-> @Target({ElementType.METHOD})
-> @Retention(RetentionPolicy.RUNTIME)
-> @Documented
-> @RequestMapping(
->     method = {RequestMethod.GET}
-> )
-> ```
->
-> 是`@RequestMapping(method = RequestMethod.POST)`的便捷形式
-
-```java
-@GetMapping
-public  method(){
-    List<SelectAllDeptDTO> depts = deptMapper.selectAll();
-    HashMap<String, Object> map = new HashMap<>();
-    map.put("code", 1);
-    map.put("data", depts);
-    map.put("msg","查询成功");
-    return map;
-}
-```
-
-@PostMapping
-
-
-
-@RestController
 
 # Spring IOC&DI
 
@@ -989,19 +900,19 @@ OOP
 
 # Springboot配置文件
 
-支持三种格式的配置文件
+## 支持三种格式的配置文件
 
 可以同时存在，属性重复优先级从高到低，推荐使用yml
 
-+ application.properties
++ `application.properties`
 
-  > 采用键值对（Key-Value）格式，例如：
+  > 采用键值对（Key-Value）格式，每一行是一个键值对，例如：
   >
   > server.port=8080
   >
   > server.servlet.context-path=/
 
-+ application.yml
++ `application.yml` / `application.yaml`
   ——简洁的冒号与缩进格式
   ——支持定义复杂数据类型
 
@@ -1009,7 +920,7 @@ OOP
   >
   >   多个值用逗号隔开
   >
-  >   ```xml
+  >   ```yml
   >   student:
   >     subject: java, go, js
   >   ```
@@ -1018,7 +929,7 @@ OOP
   >
   >   -换行定义，或者使用[]，值用逗号隔开
   >
-  >   ```xml
+  >   ```yml
   >   student:
   >     teachets:
   >       - lisi
@@ -1029,16 +940,409 @@ OOP
   > + map
   >   K : V换行定义或者用{}，多个KV值用逗号隔开
   >   
-  >   
-  >
-  >  ```xml
+  >   ```yml
   >   student:
   >     family: {
-  >       father: list
+  >        father: list
   >       ,mathor: wangwu
-  >       , broter: vhaoliu
->     }
-  >  ```
-  
-+ application.yaml
+  >       ,broter: vhaoliu
+  >   }
+  >   ```
 
+## 配置文件属性映射到java对象的属性
+
++ `@Value${}`
+
+  >
+  > 适用于简单属性的单个映射
+
++ `@ConfigurationProperties(prefix = "")`
+
+  > prefix指定前缀
+  >
+  > 适用于多个属性映射
+
++ `Environment` 接口
+
+  > Spring内置的`Environment` 配置文件环境对象
+  >
+  > `getProperty("")`方法，获取配置文件中属性值。
+
+```yml
+student:
+  name: 张三
+  age: 18
+  subject: Java,Go,C
+  teachets:
+    - lisi
+    - wangwu
+    - zhaoliu
+  family: {
+     father: list
+    ,mathor: wangwu
+    ,broter: zhaoliu
+  }
+```
+
+```java
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import java.util.List;
+import java.util.Map;
+
+@Data
+@Configuration
+@ConfigurationProperties(prefix = "student")
+public class StudentConfig {
+    private String name;
+    private Integer age;
+    private String[] subject;
+    private List<String> teachers;
+    private Map<String,String> family;
+}
+```
+
+```java
+import com.alibaba.fastjson2.JSONObject;
+import com.itheima.tlias.common.result.Result;
+import com.itheima.tlias.config.StudentConfig;
+import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+@RequestMapping("/yml")
+public class TestResdYmlController {
+    @Value("${student.name}")
+    String name;
+    @Value("${student.age}")
+    Integer age;
+    @Value("${student.subject}")
+    String[] subject;
+
+    @GetMapping("/value")
+    public Result readCustomConfigYmlByValue() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name",name );
+        jsonObject.put("age", age);
+        jsonObject.put("subject", subject);
+        jsonObject.put("teachers", "@Value注解不支持映射list复杂属性");
+        jsonObject.put("family", "@Value注解不支持映射map复杂属性");
+        return Result.success(jsonObject);
+    }
+/*
+{
+  "code": 1,
+  "msg": "success",
+  "data": {
+    "name": "张三",
+    "age": 18,
+    "subject": [
+      "Java",
+      "Go",
+      "C"
+    ],
+    "teachers": "@Value注解不支持映射list复杂属性",
+    "family": "@Value注解不支持映射map复杂属性"
+  }
+}
+*/
+    @Resource
+    private StudentConfig config;
+
+    @GetMapping("/config")
+    public Result readCustomConfigYmlByConfig() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name",config.getName() );
+        jsonObject.put("age", config.getAge());
+        jsonObject.put("subject", config.getSubject());
+        jsonObject.put("teachers", config.getTeachers());
+        jsonObject.put("family", config.getFamily());
+        return Result.success(jsonObject);
+    }
+/*
+{
+  "code": 1,
+  "msg": "success",
+  "data": {
+    "name": "张三",
+    "age": 18,
+    "subject": [
+      "Java",
+      "Go",
+      "C"
+    ],
+    "teachers": null,
+    "family": {
+      "father": "list",
+      "mathor": "wangwu",
+      "broter": "zhaoliu"
+    }
+  }
+}
+*/
+    @Resource
+    Environment env;
+    @GetMapping("/env")
+    public Result readCustomConfigYmlByEvn() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name",env.getProperty("student.name"));
+        jsonObject.put("age", env.getProperty("student.age"));
+        jsonObject.put("subject", env.getProperty("student.subject"));
+        jsonObject.put("teachers", env.getProperty("student.teachers"));
+        jsonObject.put("family", env.getProperty("student.family"));
+        String[] activeProfiles = env.getActiveProfiles();
+        jsonObject.put("获取当前活动的配置文件名称数组", List.of(activeProfiles));
+        return Result.success(jsonObject);
+    }
+           
+/*
+{
+  "code": 1,
+  "msg": "success",
+  "data": {
+    "name": "张三",
+    "age": "18",
+    "subject": "Java,Go,C",
+    "teachers": null,
+    "family": null,
+    "获取当前活动的配置文件名称数组": [
+      "dev"
+    ]
+  }
+}
+*/
+}
+```
+
+## 多个配置文件同时存在的应用场景
+
+application.properties中指定决定选择哪一个配置文件
+
+> `spring.profiles.active` 指定激活环境
+
+```properties
+#指定激活某一环境的配置
+#放置所有环境的通用部分
+
+#指定激活的配置文件
+spring.profiles.active=dev
+```
+
+application-{profile}.yml
+
+其中{profile表示环境名称}，profile名字自取，一般在开发中有以下几种命名
+
++ application-dev.yml
+
+  ——本地开发环境配置文件
+
++ application-test.yml
+
+  ——测试环境配置文件
+
++ application-prod.yml
+
+  ——线上环境配置文件
+
+![image-20240825202430049](images/image-20240825202430049.png)
+
+
+
+
+
+# Springboot全局异常处理
+
+## 什么是全局异常处理
+
+​		用于统一捕获代码运转过程中的各种异常
+
+## 为什么使用全局异常处理
+
+​		不用强制写try-catch，由全局异常处理器统一捕获处理。
+​		自定义异常，不能直接返回给客户端，客户端看不懂异常信息，只能全局异常捕获
+​		Validator参数校验器，参数校验不通过会抛异常，但是无法通过try-catch语句捕获，只能使用全局异常处理器。
+
+## 异常发生阶段分类图
+
+​		![image-20240825195647452](images/image-20240825195647452.png)
+
+## 如何使用
+
+搭配使用即可捕获拦截器、参数绑定（参数解析、参数转换、参数校验）、Controller、返回值处理等抛出的异常
+
+1. 第一步自定义异常处理器类
+   组合注解@RestControllerAdvice
+
+   > @ControllerAdvice
+   >
+   > Controller增强器，给Controller层添加统一的操作或处理
+   >
+   > @ResponseBody
+   >
+   > 返回值自动为json格式
+
+2. 第二步定义方法指定要捕获的异常以及处理异常后的统一返回值与Http响应码
+
+   > @ExceptionHandler
+   >
+   > 指定捕获Controller中抛出的指定类型的异常
+   >
+   > @ResponseStatus
+   > 用于指定捕获异常后响应的Http状态码
+
+```java
+/**因为我们无法用try-catch捕获进入controller之前的异常，但是可以使用aop对controller进行调用之前的增强
+ * 因此@ControllerAdvice相当于环绕通知controller
+ * 
+ * 全局异常处理器
+ * 使用AOP对Controller方法调用前进行增强，处理进入Controller之前的异常
+ */
+@RestControllerAdvice
+public class GobalExeceptionHandler {
+
+    /**
+     * 处理ArithmeticException异常
+     * 当出现算术异常时，返回内部服务器错误状态和错误信息
+     *
+     * @return 包含错误信息的结果对象
+     */
+    @ExceptionHandler(ArithmeticException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Result handleArithmeticException(){
+        return Result.error("发生1/0算数异常");
+    }
+
+    /**
+     * 处理MethodArgumentNotValidException异常
+     * 当请求参数校验失败时，返回坏请求状态和校验错误信息
+     *
+     * @param exception 参数校验异常对象
+     * @return 包含校验错误信息的结果对象
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+        // 获取第一个校验错误的信息
+        String defaultMessage = exception.getFieldError().getDefaultMessage();
+        // 获取被拒绝的值
+        Object rejectedValue = exception.getFieldError().getRejectedValue();
+        // 获取全部校验信息
+        BindingResult bindingResult = exception.getBindingResult();
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        // 使用StringJoiner拼接所有校验错误信息
+        StringJoiner stringJoiner = new StringJoiner(",", "[", "]");
+        for (FieldError fieldError : fieldErrors) {
+            stringJoiner.add(fieldError.getDefaultMessage());
+        }
+        // 返回所有校验错误信息
+        return Result.error(stringJoiner.toString());
+    }
+
+}
+
+```
+
+
+
+## 面试题
+
+​	如何使用全局异常处理?
+​		java 异常体系
+​		Spring的全局异常处理
+
+# SpringBoot注解
+
+@RequestMapping
+
+@GetMapping
+
+@PostMapping
+
+@RestController
+
+```
+@RequestBody
+```
+
+```
+@RequestBody
+```
+
+```
+@PathVariable
+```
+
+
+
+
+
+@JsonFormat
+
+@JsonIgnore
+
+@JsonIgnoreProperties
+
+@JsonInclude
+
+
+
+@RequestMapping
+
+> `@RequestMapping`是 Spring 框架中的一个核心注解，用于映射 Web 请求到特定的方法上。
+>
+> ```java
+> @Target({ElementType.TYPE, ElementType.METHOD})
+> @Retention(RetentionPolicy.RUNTIME)
+> @Documented
+> @Mapping
+> @Reflective({ControllerMappingReflectiveProcessor.class})
+> ```
+>
+> 可以被应用到类、接口、枚举`ElementType.TYPE`以及方法`ElementType.METHOD`上
+>
+> 声明在**类**上——提取一个controller中的重复路径
+>
+> 声明在**方法**上——定义该接口的请求方法被对应的GetMapping、PostMapping等替代了
+
+```java
+@RequestMapping("/dept")
+```
+
+@GetMapping
+
+> `@GetMapping`是Spring框架的一个注解，用于处理Http Get请求
+>
+> ```java
+> @Target({ElementType.METHOD})
+> @Retention(RetentionPolicy.RUNTIME)
+> @Documented
+> @RequestMapping(
+>  method = {RequestMethod.GET}
+> )
+> ```
+>
+> 是`@RequestMapping(method = RequestMethod.POST)`的便捷形式
+
+```java
+@GetMapping
+public  method(){
+    List<SelectAllDeptDTO> depts = deptMapper.selectAll();
+    HashMap<String, Object> map = new HashMap<>();
+    map.put("code", 1);
+    map.put("data", depts);
+    map.put("msg","查询成功");
+    return map;
+}
+```
+
+@PostMapping
+
+
+
+@RestController
