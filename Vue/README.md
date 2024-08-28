@@ -199,6 +199,12 @@ npm_mirror:npmmirror.com/mirrors/npm/
 卸载2.x版本 `npm uninstall vue-cli -g`
 卸载3.x版本 `npm uninstall @vue/cli -g`
 
+# Npm
+
+
+
+## 报错
+
 ```
 npm ERR! network request to https://registry.npm.taobao.orge/@vue%2fcli failed, reason: getaddrinfo ENOTFOUND registry.npm.taobao.orge
 npm ERR! network This is a problem related to network connectivity.
@@ -266,23 +272,15 @@ npm WARN using --force Recommended protections disabled.
 
 ![img](images/1602578-20240322132549321-179440034.png)
 
- 
-
 **错误原因：**
-
- 
 
 淘宝镜像过期，具体补充说明如下：
 
- 
-
 早在 2021 年，淘宝就发文称，npm 淘宝镜像已经从 [http://registry.npm.taobao.org](https://link.zhihu.com/?target=http%3A//registry.npm.taobao.org) 切换到了 [http://registry.npmmirror.com](https://link.zhihu.com/?target=http%3A//registry.npmmirror.com)。旧域名也将于 2022 年 5 月 31 日停止服务（直到 HTTPS 证书到期才真正不能用了）
-
- 
 
 2024年1 月 22 日，淘宝原镜像域名（[http://registry.npm.taobao.org](https://link.zhihu.com/?target=http%3A//registry.npm.taobao.org)）的 HTTPS 证书正式到期，导致旧的 npm 淘宝镜像在使用时出错了。
 
- 
+
 
 **解决方案：**
 
@@ -308,7 +306,6 @@ npm config set registry https://registry.npmmirror.com
 
 ```text
 npm config get registry
-
 ```
 
 ### 5 可以正常安装需要的工具了
@@ -317,15 +314,29 @@ npm config get registry
 npm insatll
 ```
 
- 
+ 可以看到镜像已经切换，再运行npm install
+
+还是报错。。。。。。
+
+后面才发现是package-lock.json中的镜像是之前的淘宝镜像，所以光是在终端更改镜像是没用的。删掉package-lock.json文件，再执行npm install命令，下载依赖成功。
 
 # Yarn
 
-
+yarn安装
 
 ```
-yarn : 无法加载文件 D:\Program Files\nodejs\yarn.ps1，因为在此系统上禁止运行脚本。
+npm install -g
 ```
+
+yarn卸载
+
+```
+ yarn npm uninstall yarn -g  
+```
+
+## 报错
+
+<font color="red">`yarn : 无法加载文件 D:\Program Files\nodejs\yarn.ps1，因为在此系统上禁止运行脚本。`</font>
 
 先输入 `get-ExecutionPolicy` 查看状态
 Restricted 表示禁用
@@ -334,14 +345,8 @@ Restricted 表示禁用
 
 然后就可以正常使用了
 
-
-
-```
-error Error: certificate has expired
-    at TLSSocket.onConnectSecure (_tls_wrap.js:1502:34)
-    at TLSSocket.emit (events.js:314:20)
-    at TLSSocket._finishInit (_tls_wrap.js:937:8)
-```
+<font color="red">`error Error: certificate has expired <br>at TLSSocket.onConnectSecure (_tls_wrap.js:1502:34) at TLSSocket.emit (events.js:314:20)
+    at TLSSocket._finishInit (_tls_wrap.js:937:8)`</font>
 
 这个问题提示是证书过期导致的。
 
@@ -354,6 +359,16 @@ yarn config set strict-ssl false
 然后再继续安装。
 
 就可以了。
+
+<font color="red">`[2/4] Fetching packages...
+info There appears to be trouble with your network connection. Retrying...
+info There appears to be trouble with your network connection. Retrying...
+info There appears to be trouble with your network connection. Retrying...
+info There appears to be trouble with your network connection. Retrying...
+info There appears to be trouble with your network connection. Retrying...
+error Error: connect ETIMEDOUT 104.16.0.35:443
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1144:16)
+info Visit https://yarnpkg.com/en/docs/cli/install for documentation about this command.`</font>
 
 ```
 [2/4] Fetching packages...
