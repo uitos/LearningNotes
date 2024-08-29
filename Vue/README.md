@@ -50,10 +50,10 @@
   <ol></ol>
   ```
 
-  > <ol
-  >     <li>孙悟空</li>
-  >     <li>沙僧</li>
-  >     <li>八戒</li>
+  > <ol>
+  >        <li>孙悟空</li>
+  >        <li>沙僧</li>
+  >        <li>八戒</li>
   > </ol>
 
 + 无序列表
@@ -70,7 +70,7 @@
   <li><li>
   ```
   
-  > <ul
+  > <ul>
   >     <li>李白</li>
   >     <li>韩信</li>
   >     <li>镜</li>
@@ -105,21 +105,38 @@
   <!-- td table data 单元格 -->
   <td></td>
   ```
-
-> <table border="1">
->     <tr>
->       <th>姓名</th>
->       <th>年龄</th>
->     </tr>
->     <tr>
->       <td>张三</td>
->       <td>18</td>
->     </tr>
->     <tr>
->       <td>李四</td>
->       <td>22</td>
->     </tr>
-> </table>
+  
+  ```html
+  <table>
+   <tr>
+     <th>姓名</th>
+     <th>年龄</th>
+   </tr>
+   <tr>
+     <td>张三</td>
+     <td>18</td>
+   </tr>
+   <tr>
+     <td>李四</td>
+     <td>22</td>
+   </tr>
+  </table>
+  ```
+  
+  > <table>
+  >  <tr>
+  >    <th>姓名</th>
+  >    <th>年龄</th>
+  >  </tr>
+  >  <tr>
+  >    <td>张三</td>
+  >    <td>18</td>
+  >  </tr>
+  >  <tr>
+  >    <td>李四</td>
+  >    <td>22</td>
+  >  </tr>
+  > </table>
 
 
 
@@ -141,16 +158,20 @@
 </div>
 
 > 独占一行
->​宽跟随父标签,高跟随内容
-> ​可以指定宽高(width,height)
+>
+> 宽跟随父标签,高跟随内容
+>
+> 可以指定宽高(width,height)
 
 `<span></span>`
 
-> ​				<span></span>
->​					一行可以有多个
-> ​					宽高跟随内容,不能设置宽高
-> ​		<br/>
-> ​			换行
+> 一行可以有多个
+>
+> 宽高跟随内容,不能设置宽高
+
+`<br/>`
+
+> 换行
 
 <p style="border: 1px solid #000;">
 	123<br>
@@ -159,15 +180,23 @@
 
 `&nbsp;`
 
-文字间空格
+> 文字间空格
 
 `<a></a>`
-超链接
-href: hyper reference指定跳转的url网址
-target
-指定跳转方式
-_self 本页面打开
-_blank新的页面标签打开
+
+> 超链接
+>
+> `href:` hyper reference
+>
+> 指定跳转的url网址
+> `target`
+> 指定跳转方式
+> `_self`
+>
+> 本页面打开
+> `_blank`
+>
+> 新的页面标签打开
 
 `<section></section>`
 
