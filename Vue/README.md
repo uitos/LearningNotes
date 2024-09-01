@@ -1,6 +1,8 @@
+前言
 
+[Html5+CSS3](./Html5+CSS3)
 
-
+[JavaScript](./JavaScript)
 
 
 
@@ -200,21 +202,299 @@ npm_mirror:npmmirror.com/mirrors/npm/
 
 # Vue
 
-减少对原生Dom的操作
+目的：减少对原生Dom的操作
 
-双向数据绑定: js数据变量和html标签内容进行绑定
-响应式数据:不需要操作原生dom对象,自动实现双向数据绑定
+双向数据绑定: 
 
-# 安装Vue
+> js数据变量和html标签内容进行绑定
 
+响应式数据:
 
+> 不需要操作原生dom对象,自动实现双向数据绑定
 
-## 安装vue-cli 3.x
+Vue工程化与组件化
+
+# Vue工程化
+
+环境准备
+`node.js`——vue项目运行环境
+`npm`——vue打包以及依赖管理工具
+`vue-cli`——vue项目构建工具
+创建第一个Vue项目
+vue-cli
+详见手册
+
+安装vue-cli 3.x
 
 1.卸载旧版本
 
 卸载2.x版本 `npm uninstall vue-cli -g`
 卸载3.x版本 `npm uninstall @vue/cli -g`
+
+# Vue组件化
+
+### 什么是组件
+
+组件（component）是vue中最强大的功能之一，一个组件你可以简单想像成一个html页面
+
+### 开发组件
+
+使用步骤
+
+1. 定义组件
+
+   在src/components文件夹内新建一个.vue后缀的文件作为组件
+
+   组件的名称（代码严格检查）——大驼峰、多个单词
+
+   ![image-20240901194613317](images/image-20240901194613317.png)
+
+   关闭代码严格检查
+
+   vue.config.js
+
+   ```js
+   module.exports = defineConfig({
+   	/*
+   	...
+   	*/
+     //禁用代码严格检查，用途：保存的时候把严格检查禁掉
+     lintOnSave: false
+   })
+   ```
+
+   
+
+   每一个.vue文件由templete、script、style构成
+
+   > template——代表html页面
+   > script——代表数据和行为
+   > style——代表样式 ,style写上scoped属性，css样式只对当前的组件生效
+
+   HelloWorld.vue
+
+   ```vue
+   <template>
+     <div class="hello">
+       <h1>{{ msg }}</h1>
+     </div>
+   </template>
+   
+   <script>
+   export default {
+     name: 'HelloWorld',
+     props: {
+       msg: String
+     }
+   }
+   </script>
+   
+   <!-- Add "scoped" attribute to limit CSS to this component only -->
+   <style scoped>
+   </style>
+   
+   ```
+
+   MyFirst.vue
+
+   ```vue
+   <template>
+       <div>
+           <h1>第一个Vue组件,{{ word }}</h1>
+           <span v-for="item in arr" >{{ item }}</span>
+       </div>
+   </template>
+   <script setup>
+       var word = '你好';
+       var arr = [1,2,3,4,5];
+   </script>
+   <style>
+   </style>
+   ```
+
+   
+
+2. 引入组件
+   格式：import 自定义组件名 from '组件路径 
+
+   > 若导入的文件名为vue后缀则可以省略（vue中可以自动识别.vue文件后缀）
+   >
+   > 导入的路径可以写绝对路径（@默认代表项目中的src目录）
+
+3. 导出组件
+
+App.vue
+
+```vue
+<template>
+  <HelloWorld msg="Welcome to Your Vue.js App"/> 
+  <!-- 在根组件中使用子组件把子组件当成一个html标签，-->
+   <!-- vue会自动捕获该子组件中的template中的html代码 ，拼接在根组件--> 
+  <MyFirst/>
+  
+</template>
+
+<script>
+import HelloWorld from './components/HelloWorld.vue'
+//在跟组件中导入子组件
+import MyFirst from '@/components/MyFirst.vue'
+//导出子组件
+export default {
+  name: 'App',
+  components: {
+    HelloWorld,
+    MyFirst
+  }
+}
+</script>
+
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+</style>
+
+```
+
+运行效果
+
+![image-20240901194814548](images/image-20240901194814548.png)
+
+
+
+## vue文件中setup组合式api的使用
+
++ 第一种
+
+  > 给script标签添加一个setup标识即可，并且定义的所有属性和函数都会直接暴露给template，不需要返回
+
+  ```vue
+  <script setup>
+  	
+  </script>
+  ```
+
++ 第二种
+
+  > script标签显示写出setup函数
+  >
+  > export default负责导出setup函数给外部使用
+
+  ```vue
+  <script>
+  export default {
+      setup() {
+          return {
+              
+          }
+      }
+  }
+  </script>
+  ```
+
+# Vue3 UI框架
+
+## Element plus
+
+Element plus只适用于Vue3框架！
+
+官方网站https://element-plus.org/
+
+1. 安装element-plus
+
+   ```shell
+   npm install element-plus --save
+   如果安装后启动失败,可能由于依赖有缓存,执行以下命令
+   npm cache clean --force  //清除缓存
+   npm install  //重新安装依赖
+   或者以管理员身份运行VSCode
+   ```
+
+2. 完整引入
+
+   完整引入整个element plus 库，即把所有的组件全部下载到项目中，这样前端项目会变得有些大
+
+3. 国际化
+
+   Element plus是国际版的，默认使用的英文的，配置语言为中文
+
+4. 完整配置
+
+   main.js
+
+    ```js
+   import { createApp } from 'vue'
+   import App from './App.vue'
+   //导入element plus 库
+   import ElementPlus from 'element-plus'
+   import 'element-plus/dist/index.css'
+   //导入中文语言包
+   import zhCn from 'element-plus/es/locale/lang/zh-cn'
+   
+   const app = createApp(App)
+   
+   //vue使用element plus样式库，设置组件语言为中文
+   app.use(ElementPlus, {
+       locale: zhCn,
+   })
+   //把vue应用挂载到 页面上
+   app.mount('#app')
+    ```
+
+5. Element plus组件使用
+
+   点击页面中的”组件“，进行组件的挑选
+
+   ![image-20240901203536842](images/image-20240901203536842.png)
+
+   可在Playground中在线编辑及预览
+
+   ![image-20240901204227048](images/image-20240901204227048.png)
+
+   ![image-20240901204514845](images/image-20240901204514845.png)
+
+# Vue路由（Vue Router）
+
+## 为什么使用路由
+
+为了实现页面跳转
+
+## 安装路由
+
+
+
+`npm install vue-router@4`
+
+## 路由的两种基本方式
+
++ 声明式路由
+  利用`<router-link to=''></router-link>`标签指定路径进行跳转
+  在`<route-link>`标签后添加路由占位标签`<router-view></router-view>`
+
++ 编程式路由（点击事件路由）
+
+  ```vue
+  <script>
+  import router from '@/router/router';
+  export default{
+      setup(){
+          function jump(){
+              router.push(跳转路径)
+          }
+          return {
+              jump
+          }
+      }
+  }
+  </script>
+  ```
+
+
 
 # Npm
 
