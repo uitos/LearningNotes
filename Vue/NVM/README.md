@@ -127,7 +127,7 @@ npm config set cache 'D:/Program Files/node/node_cache'
 npm config ls
 ```
 
-
+![image-20240907155754940](images/image-20240907155754940.png)
 
 ## nvm 常用命令
 
