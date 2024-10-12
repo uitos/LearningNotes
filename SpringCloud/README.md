@@ -50,7 +50,7 @@ startup.cmd -m standalone
 - 在Nacos中添加共享配置
 - 微服务拉取配置
 
-### 添加共享配置
+#### 添加共享配置
 
 以cart-service为例，我们看看有哪些配置是重复的，可以抽取的：
 
@@ -76,7 +76,7 @@ JDBC相关配置：
 - `数据库端口`：通过`${hm.db.port:3306}`配置了默认值为`3306`，同时允许通过`${hm.db.port}`来覆盖默认值
 - `数据库database`：可以通过`${hm.db.database}`来设定，无默认值
 
-### 拉取共享配置
+#### 拉取共享配置
 
 我们要在微服务拉取共享配置。将拉取到的共享配置与本地的`application.yaml`配置合并，完成项目上下文的初始化。
 
@@ -163,16 +163,94 @@ hm:
 
 重启服务，发现所有配置都生效了。
 
-### 配置热更新
+### 配置热更新（配置实时更新）
 
+有很多的业务相关参数，将来可能会根据实际情况临时调整。
 
+>  例如购物车业务，购物车数量有一个上限，默认是10
 
+我们应该将其配置在配置文件中，方便后期修改。
 
+但现在的问题是，即便写在配置文件中，修改了配置还是需要重新打包、重启服务才能生效。能不能不用重启，直接生效呢？
 
-两种情况
+这就要用到Nacos的配置热更新能力了，分为两步：
+
+- 在Nacos中添加配置
+- 在微服务读取配置
+
+#### 添加配置到Nacos
+
+在Nacos中添加一个配置文件，将购物车的上限数量添加到配置中：
+
+![image-20241012101957487](images/image-20241012101957487.png)
+
+注意文件的dataId格式：
+
+```
+[服务名]-[spring.active.profile].[后缀名]
+```
+
+文件名称由三部分组成：
+
+- **`服务名`**：我们是购物车服务，所以是`cart-service`
+- **`spring.active.profile`**：就是spring boot中的`spring.active.profile`，可以省略，则所有profile共享该配置
+- **`后缀名`**：例如yaml
+
+>  当 配置中心有 `微服务名称.yaml` 文件时，本地微服务会自动从配置管理中心去拉取该内容
+
+提交配置，在控制台能看到新添加的配置：
+
+![image-20241012102441724](images/image-20241012102441724.png)
+
+#### 配置热更新
+
+配置热更新两种情况
 
 - 实体绑定配置文件内容： 配置中心会实时更新
 
 - 普通变量获取配置：需要类上标记@RefreshScop和变量上标记@Value注解，才能实时更新
+
+接下来，在微服务中读取配置，实现配置热更新
+
+1. 在`cart-service`中新建一个属性读取类CartProperties
+
+```java
+package com.hmall.cart.config;
+
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
+
+@Data
+@Component
+@ConfigurationProperties(prefix = "hm.cart")
+public class CartProperties {
+    private Integer maxAmount;
+}
+```
+
+接着，在业务中使用该属性加载类：
+
+![image-20241012110103012](images/image-20241012110103012.png)
+
+向购物车中添加多个商品：
+
+控制台输出：
+
+![image-20241012110510457](images/image-20241012110510457.png)
+
+我们在nacos控制台，将购物车上限配置为5，test配置为test5，点击【发布】：
+
+![image-20241012110742824](images/image-20241012110742824.png)
+
+无需重启，再次测试购物车功能：
+
+控制台输出：
+
+![image-20241012110955009](images/image-20241012110955009.png)
+
+加入成功！
+
+无需重启服务，配置热更新就生效了！
 
 ### 
