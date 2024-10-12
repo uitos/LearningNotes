@@ -68,6 +68,10 @@ JDBC相关配置：
 
 在表单中填写信息：
 
+Data ID建议以**配置文件类型后缀为结尾**
+
+因为，有些Nacos版本可能不识别文件
+
 ![image-20241012093039197](images/image-20241012093039197.png)
 
 注意这里的JDBC的相关参数并没有写死，例如：
@@ -129,6 +133,7 @@ spring:
         server-addr: localhost:8848 #nacos配置管理中心地址
         file-extension: yaml #配置中心中配置文件的后缀
         shared-configs:
+        	#dataId与data-id是一样的
           - data-id: shared-jdbc.yaml #需要拉取的配置文件名称
 ```
 
