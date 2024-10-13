@@ -23,61 +23,120 @@ sudo yum remove docker \
                   docker-engine
 ```
 
-安装软件包（提供实用程序）
+安装所需软件包（提供实用程序）
 
 ```
 sudo yum install -y yum-utils
 ```
 
-**2.设置 yum 源**
+使用以下命令来设置稳定的仓库
 
-设置一个yum源，下面两个都可用
+> （使用官方源地址（比较慢）
+>
+> ```
+> yum-config-manager --add-repo http://download.docker.com/linux/centos/docker-ce.repo
+> ```
+>
+> （阿里仓库）
+>
+> ```
+> yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+> ```
+>
 
-（中央仓库）
+### 安装 Docker
+
++ 安装**最新Docker版本**
+
+  安装最新版本的 Docker和containerd，或者转到下一步安装特定版本
+
+  ```
+  sudo yum install docker-ce docker-ce-cli containerd.io
+  ```
+
++ 或者安装**特定Docker版本**
+
+  1.查看可用版本有哪些
+
+  ```
+  sudo yum list docker-ce --showduplicates | sort -r
+  ```
+
+  查询结果，例如：
+
+  ```
+  docker-ce.x86_64  3:18.09.1-3.el7           docker-ce-stable
+  docker-ce.x86_64  3:18.09.0-3.el7           docker-ce-stable
+  docker-ce.x86_64  18.06.1.ce-3.el7           docker-ce-stable
+  docker-ce.x86_64  18.06.0.ce-3.el7           docker-ce-stable
+  ```
+
+  2.选择一个版本并安装：
+
+  > 通过其完整的软件包名称安装特定版本，该软件包名称是软件包名称（docker-ce）加上版本字符串（第二列），从第一个冒号（:）一直到第一个连字符，并用连字符（-）分隔。
+  >
+  > 例如：docker-ce-18.09.1
+
+  ```
+  sudo yum -y install docker-ce-18.09.1 docker-ce-cli-18.09.1 containerd.io
+  ```
+
+
+### 配置源并测试Docker
+
+配置源，**修改`/etc/docker/daemon.json`文件**
+
+该文件用于配置项目参数 默认是不存在的 需要自己创建
 
 ```
-yum-config-manager --add-repo http://download.docker.com/linux/centos/docker-ce.repo
+vi /etc/docker/daemon.json
 ```
 
-（阿里仓库）
+然后**导入镜像仓库**
+
+> Docker 官方中国区：https://registry.docker-cn.com
+> 网易：http://hub-mirror.c.163.com
+> 中国科技大学：https://docker.mirrors.ustc.edu.cn
+> 阿里云：https://pee6w651.mirror.aliyuncs.com
+
+插入并保存
 
 ```
-yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+{
+	"registry-mirrors":[
+		"https://registry.docker-cn.com",
+		"http://hub-mirror.c.163.com",
+		"https://docker.mirrors.ustc.edu.cn",
+		"https://pee6w651.mirror.aliyuncs.com"
+	]
+}
 ```
 
-**yum源重置**
-1、进入配置目录
+启动Docker
 
 ```
-cd /etc/yum.repos.d
+sudo systemctl start docker
+sudo systemctl enable docker #(Linux)设置开机自启动
 ```
 
-2、查看源
+通过运行 hello-world 镜像来验证是否正确安装了 Docker
 
 ```
-ll
+sudo docker run hello-world
 ```
 
-3、删除源`rm -f ${文件名}.repo`
+### 卸载 Docker
+
+删除安装包：
 
 ```
-rm -f docker-ce.repo
+yum remove docker-ce
 ```
 
-
-
-选择docker版本并安装 
-
-（1）查看可用版本有哪些
+删除镜像、容器、配置文件等内容：
 
 ```
-yum list docker-ce --showduplicates | sort -r
-```
-
-（2）选择一个版本并安装：`yum install docker-ce-版本号`
-
-```
-yum -y install docker-ce-18.03.1.ce
+rm -rf /var/lib/docker
 ```
 
 
