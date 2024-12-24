@@ -1,4 +1,4 @@
-# 官网
+官网
 
 https://uniapp.dcloud.net.cn/
 
@@ -22,6 +22,47 @@ gitee下载：[https://gitee.com/dcloud/uni-preset-vue/repository/archive/vite-t
 官网链接：[https://uniapp.dcloud.net.cn/quickstart-cli.html#创建uni-app](https://uniapp.dcloud.net.cn/quickstart-cli.html#创建uni-app)
 
 ![image-20241009224301372](images/image-20241009224301372.png)
+
+# 启动 uni-app 项目
+
+## 使用VSCode启动 通过HBuilder X创建的uni-app项目
+
+1. 安装插件 uniapp run
+
+   ![image-20241225001214345](images/image-20241225001214345.png)
+
+2. 安装后配置
+
+   ![image-20241225001434161](images/image-20241225001434161.png)
+
+   配置安装地址
+
+   ![image-20241225001809093](images/image-20241225001809093.png)
+
+3. 添加配置，如果第一次使用可以使用默认模版方式快速创建 launch.json
+
+   运行->添加配置->Uni App->Ctrl+s保存
+
+   ![image-20241225003555043](images/image-20241225003555043.png)
+
+   【如果有Uniapp Run，就直接点击，没有就安装扩展回到第一步】
+
+   ![image-20241225003637544](images/image-20241225003637544.png)
+
+   `.vscode`文件夹下的`launch.json`配置已经生成好啦
+
+   ![image-20241225003108515](images/image-20241225003108515.png)
+
+   新增如下两条 ，上面其他的是默认的，无需修改
+
+   ```cobol
+   "vueVersion": "v3",  // vue版本
+   "openDevTool": true,  // 是否自动启动模拟器
+   ```
+
+   ![image-20241225005818373](images/image-20241225005818373.png)4. 添加完成之后点击启动即可
+
+   ![image-20241225010133330](images/image-20241225010133330.png)
 
 # 用 VS Code 开发 uni-app 项目
 
@@ -185,7 +226,7 @@ text和view报错 就去找到vue-official插件，然后右键，点击安装�
 
 
 
-
+# 
 
 
 
