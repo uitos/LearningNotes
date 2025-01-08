@@ -83,3 +83,17 @@ public class FastJson2RedisSerializer<T> implements RedisSerializer<T>
 }
 ```
 
+```xml
+<!-- Spring Boot Redis数据模块依赖-->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+<!-- Fastjson2数据模块依赖-->
+<dependency>
+    <groupId>com.alibaba.fastjson2</groupId>
+    <artifactId>fastjson2</artifactId>
+    <version>${version}</version>
+</dependency>
+```
+
