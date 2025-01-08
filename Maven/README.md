@@ -9,8 +9,6 @@ Apache软件基金会下的一款用于构建java项目的开源软件
 		Ant
 		Gradle
 
-
-
 ## 生命周期 Lifecycle
 
 1. clean
@@ -64,37 +62,11 @@ http://maven.apache.org/download.cgi
 
 ![image-20240808121722443](images/image-20240808121722443.png)
 
-# IDEA使用Maven项目
-
-![image-20240808120025938](images/image-20240808120025938.png)
-
-![image-20240808120201092](images/image-20240808120201092.png)
-
-![image-20240808120251945](images/image-20240808120251945.png)
-
-![image-20240808120337788](images/image-20240808120337788.png)
-
-![image-20240808120623811](images/image-20240808120623811.png)
-
-![image-20240808120800709](images/image-20240808120800709.png)
-
-Apply->OK
-
-
-
 # Maven仓库
 
-新
+新网址https://central.sonatype.com/
 
-https://central.sonatype.com/
-
-旧
-
-https://mvnrepository.com/
-
-
-
-
+旧网址https://mvnrepository.com/
 
 ```xml
 <build>
@@ -125,34 +97,65 @@ https://mvnrepository.com/
             1.自动计算分页
             2.自动执行计算总数的sql
             3.提供统一的分页类（PageInfo）-->
-        <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>2.1.0</version>
-        </dependency>
+<dependency>
+    <groupId>com.github.pagehelper</groupId>
+    <artifactId>pagehelper-spring-boot-starter</artifactId>
+    <version>2.1.0</version>
+</dependency>
 ```
 
 
 
 ```xml
 <!--    SprintBoot优雅参数校验-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-            <version>3.3.2</version>
-        </dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+    <version>3.3.2</version>
+</dependency>
 ```
 
 
 
 ```xml
 <!--        apache commons集合工具包-> 针对jdk中的集合框架提出的-->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.4</version>
-        </dependency>
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-collections4</artifactId>
+    <version>4.4</version>
+</dependency>
 ```
+
+```xml
+<!--字符串处理：提供丰富的字符串操作方法，如 StringUtils 类。
+数值处理：提供数值类型的操作方法，如 NumberUtils 类。
+日期时间处理：提供日期和时间的操作方法，如 DateUtils 类。
+对象操作：提供对象比较、哈希码生成等方法，如 ObjectUtils 类。
+异常处理：提供异常处理的辅助方法，如 ExceptionUtils 类。
+集合操作：提供集合相关的操作方法，如 ArrayUtils 和 CollectionUtils 类。-->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+</dependency>
+```
+
+```xml
+<!--Java 应用中进行 JSON 数据的序列化和反序列化操作
+
+JSON 序列化：将 Java 对象转换为 JSON 字符串。
+JSON 反序列化：将 JSON 字符串转换为 Java 对象。
+支持多种数据类型：可以处理复杂的对象结构、集合、数组等。
+高性能：相比其他 JSON 库，fastjson2 在性能上有显著优势。-->
+<dependency>
+    <groupId>com.alibaba.fastjson2</groupId>
+    <artifactId>fastjson2</artifactId>
+    <version>2.0.52</version>
+</dependency>
+```
+
+
+
+
 
 如何使用Maven把项目导入到本地仓库中
 	Maven生命周期
